@@ -12,6 +12,7 @@ const $ = gulpLoadPlugins();
 gulp.task('extras', () => {
   return gulp.src([
     'app/*.*',
+    'app/styles/fonts/*',
     'app/_locales/**',
     '!app/scripts.babel',
     '!app/*.json',
@@ -93,7 +94,7 @@ gulp.task('babel', () => {
 
 gulp.task('clean', del.bind(null, ['.tmp', 'dist']));
 
-gulp.task('watch', ['lint', 'babel'], () => {
+gulp.task('watch', ['lint', 'style', 'babel'], () => {
   $.livereload.listen();
 
   gulp.watch([
@@ -101,11 +102,18 @@ gulp.task('watch', ['lint', 'babel'], () => {
     'app/scripts/**/*.js',
     'app/images/**/*',
     'app/styles/**/*',
+    'app/templates/**/*',
     'app/_locales/**/*.json'
   ]).on('change', $.livereload.reload);
 
   gulp.watch('app/scripts.babel/**/*.js', ['lint', 'babel']);
   gulp.watch('bower.json', ['wiredep']);
+});
+
+gulp.task('style', () => {
+  return gulp.src('app/styles/less/main.less')
+    .pipe($.less())
+    .pipe(gulp.dest('app/styles'));
 });
 
 gulp.task('size', () => {
@@ -129,7 +137,7 @@ gulp.task('package', function () {
 
 gulp.task('build', (cb) => {
   runSequence(
-    'lint', 'babel', 'chromeManifest',
+    'lint', 'style', 'babel', 'chromeManifest',
     ['html', 'images', 'extras'],
     'size', cb);
 });
