@@ -4,6 +4,8 @@ import gulpLoadPlugins from 'gulp-load-plugins';
 import del from 'del';
 import runSequence from 'run-sequence';
 import {stream as wiredep} from 'wiredep';
+import webpack from 'webpack-stream';
+import named from 'vinyl-named';
 
 const $ = gulpLoadPlugins();
 
@@ -81,6 +83,8 @@ gulp.task('chromeManifest', () => {
 
 gulp.task('babel', () => {
   return gulp.src('app/scripts.babel/**/*.js')
+      .pipe(named())
+      .pipe(webpack(require('./webpack.config.js')))
       .pipe($.babel({
         presets: ['es2015']
       }))

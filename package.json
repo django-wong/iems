@@ -43,5 +43,11 @@
         "single"
       ]
     }
+  },
+  "dependencies": {
+    "iview": "^0.9.13",
+    "vinyl-named": "^1.1.0",
+    "vue": "^1.0.28",
+    "webpack-stream": "^3.2.0"
   }
 }
