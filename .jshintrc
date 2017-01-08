@@ -87,9 +87,6 @@
 
     // Custom Globals
     "globals"       : {
-        "MapTrack": true,
-        "google": true,
-        "ClipperLib": true,
         "chrome": true
     },
     "esversion"     : 6
