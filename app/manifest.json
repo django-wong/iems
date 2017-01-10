@@ -20,7 +20,9 @@
     "idle",
     "notifications",
     "storage",
-    "webRequest"
+    "webRequest",
+    "http://iems.shinetechchina.com.cn/",
+    "tabs"
   ],
   "browser_action": {
     "default_icon": {

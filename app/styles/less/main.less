@@ -36,3 +36,38 @@ body {
 		width: 100%;
 	}
 }
+
+.header-center {
+	text-align: center;
+}
+
+#dashboard {
+	.header-center {
+		background-color: white;
+
+		.ivu-btn-group {
+			vertical-align: inherit;
+			margin-bottom: 10px;
+		}
+	}
+
+	hr {
+		opacity: .2;
+	}
+
+	.ivu-card {
+		margin-bottom: 15px;
+		
+		.ivu-card-body {
+			&> p {
+				line-height: 24px;
+			}
+
+			span {
+				position: absolute;
+				left: 106px;
+			}
+		}
+	}
+
+}

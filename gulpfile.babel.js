@@ -13,8 +13,11 @@ gulp.task('extras', () => {
   return gulp.src([
     'app/*.*',
     'app/styles/fonts/*',
+    'app/styles/main.css',
     'app/_locales/**',
+    'app/scripts/popup.js',
     '!app/scripts.babel',
+    '!app/scripts.temp',
     '!app/*.json',
     '!app/*.html',
   ], {
@@ -83,18 +86,25 @@ gulp.task('chromeManifest', () => {
 });
 
 gulp.task('babel', () => {
+  del.bind(null, ['app/scripts.temp']);
   return gulp.src('app/scripts.babel/**/*.js')
+      .pipe($.babel({
+        presets: ['es2015', 'es2017'],
+        plugins: ['transform-runtime', 'syntax-async-functions', 'transform-regenerator']
+      }))
+      .pipe(gulp.dest('app/scripts.temp'));
+});
+
+gulp.task('webpack', ['babel'], () => {
+  return gulp.src('app/scripts.temp/**/*.js')
       .pipe(named())
       .pipe(webpack(require('./webpack.config.js')))
-      .pipe($.babel({
-        presets: ['es2015']
-      }))
       .pipe(gulp.dest('app/scripts'));
 });
 
-gulp.task('clean', del.bind(null, ['.tmp', 'dist']));
+gulp.task('clean', del.bind(null, ['.tmp', 'dist', 'app/scripts.temp']));
 
-gulp.task('watch', ['lint', 'style', 'babel'], () => {
+gulp.task('watch', ['lint', 'style', 'webpack'], () => {
   $.livereload.listen();
 
   gulp.watch([
@@ -106,7 +116,8 @@ gulp.task('watch', ['lint', 'style', 'babel'], () => {
     'app/_locales/**/*.json'
   ]).on('change', $.livereload.reload);
 
-  gulp.watch('app/scripts.babel/**/*.js', ['lint', 'babel']);
+  gulp.watch('app/scripts.babel/**/*.js', ['lint', 'webpack']);
+  gulp.watch('app/templates/**/*.vue', ['lint', 'webpack']);
   gulp.watch('bower.json', ['wiredep']);
 });
 
@@ -137,7 +148,7 @@ gulp.task('package', function () {
 
 gulp.task('build', (cb) => {
   runSequence(
-    'lint', 'style', 'babel', 'chromeManifest',
+    'lint', 'style', 'webpack', 'chromeManifest',
     ['html', 'images', 'extras'],
     'size', cb);
 });
