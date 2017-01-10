@@ -22,6 +22,10 @@
 			let items = await this.$Auth.getEmailAndPassword();
 			this.formInline.email = items.email;
 			this.formInline.password = items.password;
+			var self = this;
+			if(items.email && items.password){
+				self.loginAndSave();
+			}
 		},
 
 		data() {
@@ -42,14 +46,19 @@
 				}
 				this.$data.loading = true;
 				if(await self.$Auth.checkUserName()){
-					self.$emit('logged-in', 123);
-					// chrome.tabs.create({
-					// 	url: 'http://iems.shinetechchina.com.cn/MyIems/taskes/mytaskes.aspx'
-					// });
+					self.$emit('logged-in');
 				}else{
 					self.formInline.token = await self.$Auth.getRequestVerificationToken();
-					self.$Auth.login(self.formInline).then(function(logined){
-						self.$emit('logged-in', 234);
+					if(!self.formInline.token){
+						self.$Message.error('登录TOKEN获取失败', 5);
+					}
+					self.$Auth.login(self.formInline).then(function(result){
+						if(result){
+							self.$emit('logged-in');
+						}else{
+							self.loading = false;
+							self.$Message.error(`我也不知道为什么，反正登录失败了`, 5);
+						}
 					});	
 				}
 				chrome.storage.sync.set(this.formInline, () => {});
@@ -59,16 +68,17 @@
 				this.$Auth.getUserProfile().then(function(){
 					console.info(arguments);
 				});
-				console.info(this.$router.go('/dashboard'));
+				this.$router.go('/dashboard');
 			}
 		},
 
 		events: {
 			'logged-in': function() {
+				var self = this;
 				this.$router.go('/dashboard');
 				this.$data.loading = false;
-				// chrome.tabs.create({
-				// 	url: 'http://iems.shinetechchina.com.cn/MyIems/taskes/mytaskes.aspx'
+				// this.$Auth.checkUserName().then(function(name){
+				// 	self.$Message.info(`欢迎${name}`, 1);
 				// });
 			}
 		}

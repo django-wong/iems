@@ -2,13 +2,23 @@
 * @Author: Django Wong
 * @Date:   2017-01-09 12:17:22
 * @Last Modified by:   Django Wong
-* @Last Modified time: 2017-01-10 03:07:06
+* @Last Modified time: 2017-01-10 23:59:37
 * @File Name: services.js
 */
 
 'use strict';
 
-let Auth = function(){
+FormData.toJson = function(formData){
+	var data = {};
+	formData.forEach(function(value, name){
+		data[name] = value;
+	});
+	return data;
+}
+
+var Vue;
+
+let Auth = function(Vue){
 	var email, password;
 	return {
 		checkUserName: function(){
@@ -36,7 +46,7 @@ let Auth = function(){
 					div.innerHTML = response.data;
 					resolve(div.querySelector('[name="__RequestVerificationToken"]').value);
 				}).catch(function(error){
-					reject(error);
+					resolve('');
 				});
 			});
 		},
@@ -59,7 +69,12 @@ let Auth = function(){
 						return formDate;
 					}]
 				}).then(function(response){
-					resolve(response.data.indexOf('注销'));
+					resolve(response.data.indexOf('注销') !== -1);
+				}).catch(function(error){
+					if(error.response && error.response.data){
+						resolve(error.response.data.indexOf('Log off') !== -1)
+					}
+					resolve(false);
 				});
 			});
 		},
@@ -83,13 +98,15 @@ let Auth = function(){
 	}
 };
 
-let Utility = function(){
+let Utility = function(Vue){
 	return {
 		getViewAndEventData: function(){
+			var that = this;
 			return new Promise(function(resolve, reject){
-				axios.get('http://iems.shinetechchina.com.cn/MyIems/taskes/mytaskes.aspx').then(function(){
+				axios.get('http://iems.shinetechchina.com.cn/MyIems/taskes/mytaskes.aspx').then(function(response){
 					let div = document.createElement('div');
-					let data = this.extractViewAndEventDataFromHTML(response.data);
+					let data = that.extractViewAndEventDataFromHTML(response.data);
+					console.info(data);
 					resolve(data);
 				});
 			});
@@ -110,7 +127,7 @@ let Utility = function(){
 	};
 };
 
-let Project = function(){
+let Project = function(Vue){
 	var projects = [];
 	return {
 		getProjects: function(){
@@ -121,29 +138,56 @@ let Project = function(){
 					let tables = div.querySelectorAll('[cellpadding="3"]');
 					var items = [];
 					tables.forEach(function(table, index){
-						// let div = document.createElement('div');
-						// let html = table.outerHTML;
+						let HidIsOverTimeEle = div.querySelector(`#ContentPlaceHolderMain_rtPOs_hidIsOverTime_${index}`);
+						let PrimaryContactEle = div.querySelector(`#ContentPlaceHolderMain_rtPOs_Label2_${index}`);
+						let ProjectCodeEle = div.querySelector(`#ContentPlaceHolderMain_rtPOs_Label7_${index}`);
+						let ProjectNameEle = div.querySelector(`#ContentPlaceHolderMain_rtPOs_lProjectName_${index}`);
+						let POTypeEle = div.querySelector(`#ContentPlaceHolderMain_rtPOs_lProjectName_${index}`);
+						let PONoEle = div.querySelector(`#ContentPlaceHolderMain_rtPOs_lPONo_${index}`);
+						let DateSignedEle = div.querySelector(`#ContentPlaceHolderMain_rtPOs_lPOSignDate_${index}`);
+						let StartDateEle = div.querySelector(`#ContentPlaceHolderMain_rtPOs_Label4_${index}`);
+						let DueDateEle = div.querySelector(`#ContentPlaceHolderMain_rtPOs_Label5_${index}`);
+						let POHoursEle = div.querySelector(`#ContentPlaceHolderMain_rtPOs_lQuality_${index}`);
+						let RemainingHoursEle = div.querySelector(`#ContentPlaceHolderMain_rtPOs_Label6_${index}`);
+						let UnitPriceEle = div.querySelector(`#ContentPlaceHolderMain_rtPOs_Label1_${index}`);
+						let UnitEle = div.querySelector(`#ContentPlaceHolderMain_rtPOs_Label1_${index}`);
+						let TotalValueEle = div.querySelector(`#ContentPlaceHolderMain_rtPOs_Label3_${index}`);
 						let project = {
-							HidIsOverTime: div.querySelector(`#ContentPlaceHolderMain_rtPOs_hidIsOverTime_${index}`).value.toUpperCase() === 'FALSE' ? false : true,
-							PrimaryContact: div.querySelector(`#ContentPlaceHolderMain_rtPOs_Label2_${index}`).textContent,
-							ProjectCode: div.querySelector(`#ContentPlaceHolderMain_rtPOs_Label7_${index}`).textContent,
-							ProjectName: div.querySelector(`#ContentPlaceHolderMain_rtPOs_lProjectName_${index}`).textContent,
-							POType: div.querySelector(`#ContentPlaceHolderMain_rtPOs_lProjectName_${index}`).parentElement.nextElementSibling.querySelector('b').nextSibling.textContent.substr(2),
-							PONo: div.querySelector(`#ContentPlaceHolderMain_rtPOs_lPONo_${index}`).textContent,
-							DateSigned: div.querySelector(`#ContentPlaceHolderMain_rtPOs_lPOSignDate_${index}`).textContent,
-							StartDate: div.querySelector(`#ContentPlaceHolderMain_rtPOs_Label4_${index}`).textContent,
-							DueDate: div.querySelector(`#ContentPlaceHolderMain_rtPOs_Label5_${index}`).textContent,
-							POHours: parseFloat(div.querySelector(`#ContentPlaceHolderMain_rtPOs_lQuality_${index}`).textContent),
-							RemainingHours: parseFloat(div.querySelector(`#ContentPlaceHolderMain_rtPOs_Label6_${index}`).textContent),
-							UnitPrice: parseFloat(div.querySelector(`#ContentPlaceHolderMain_rtPOs_Label1_${index}`).textContent),
-							Unit: div.querySelector(`#ContentPlaceHolderMain_rtPOs_Label1_${index}`).nextSibling.textContent.substr(1),
-							TotalValue: parseFloat(div.querySelector(`#ContentPlaceHolderMain_rtPOs_Label3_${index}`).textContent),
-							FormData: new FormData()
+							HidIsOverTime: HidIsOverTimeEle ? (HidIsOverTimeEle.value.toUpperCase() === 'FALSE' ? false : true) : false,
+							PrimaryContact: PrimaryContactEle ? PrimaryContactEle.textContent : null,
+							ProjectCode: ProjectCodeEle ? ProjectCodeEle.textContent : null,
+							ProjectName: ProjectNameEle ? ProjectNameEle.textContent : null,
+							POType: ProjectNameEle ? ProjectNameEle.parentElement.nextElementSibling.querySelector('b').nextSibling.textContent.substr(2) : null,
+							PONo: PONoEle ? PONoEle.textContent : null,
+							DateSigned: DateSignedEle ? DateSignedEle.textContent : null,
+							StartDate: StartDateEle ? StartDateEle.textContent : null,
+							DueDate: DueDateEle ? DueDateEle.textContent : null,
+							POHours: POHoursEle ? parseFloat(POHoursEle.textContent) : 0,
+							RemainingHours: RemainingHoursEle ? parseFloat(RemainingHoursEle.textContent) : 0,
+							UnitPrice: UnitPriceEle ? parseFloat(UnitPriceEle.textContent) : null,
+							Unit: UnitPriceEle ? UnitPriceEle.nextSibling.textContent.substr(1) : '',
+							TotalValue: TotalValueEle ? parseFloat(TotalValueEle.textContent) : 0,
+							FormData: new FormData(),
+							// 额外的属性
+							$num: index < 10 ? `0${index}` : index,
+							data: {
+								hours: 0,
+								recording: false,
+								title: '',
+								desc: ''
+							}
 						};
 						let tr = div.querySelector(`#ContentPlaceHolderMain_rtPOs_tr1_${index}`);
 						if(tr){
+							project.FormData = new FormData();
 							let inputs = tr.querySelectorAll('input');
 							inputs.forEach(function(input, index){
+								project.FormData.append(input.name, input.value);
+							});
+
+							let next = tr.parentElement.parentElement.parentElement.nextElementSibling;
+							let hiddenInputs = next.querySelectorAll('input');
+							hiddenInputs.forEach(function(input, index){
 								project.FormData.append(input.name, input.value);
 							});
 						}
@@ -161,6 +205,50 @@ let Project = function(){
 					return projects[i];
 				}
 			}
+		},
+
+		_prepareFormData: async function(project, hours, title, desc){
+			let data = await Vue.Utility.getViewAndEventData();
+			let formData = project.FormData;
+			for(var i in data){
+				if(data.hasOwnProperty(i)){
+					formData.set(i, data[i]);
+				}
+			}
+			formData.forEach(function(value, name, data){
+				switch(name) {
+					case `ctl00$ContentPlaceHolderMain$rtPOs$ctl${project.$num}$txtTask1`:
+						data.set(name, title);
+						break;
+					case `ctl00$ContentPlaceHolderMain$rtPOs$ctl${project.$num}$txtHours1`:
+						data.set(name, hours);
+						break;
+					case `ctl00$ContentPlaceHolderMain$rtPOs$ctl${project.$num}$txtDescription1`:
+						data.set(name, desc);
+						break;
+				}
+			});
+			return formData;
+		},
+
+		recordWorkload: async function(project, hours, title, desc){
+			project.data.recording = true;
+			let formData = await this._prepareFormData(project, hours, title, desc);
+			let data = FormData.toJson(formData);
+			return new Promise(function(resolve, reject){
+				axios.post('http://iems.shinetechchina.com.cn/MyIems/taskes/mytaskes.aspx', formData).then(function(response){
+					project.data.recording = false;
+					if(response.data.indexOf('添加成功') !== -1){
+						project.RemainingHours -= hours;
+						project.data.hours = 0;
+						resolve(true);
+					}
+					resolve(false);
+				}).catch(function(){
+					project.data.recording = false;
+					resolve(false);
+				});
+			});
 		},
 
 		getStars: function(){
@@ -183,15 +271,60 @@ let Project = function(){
 	};
 }
 
-let History = function(){
+let History = function(Vue){
 	return {
-
+		/**
+		 * Query workload historis
+		 * @param  {string} contact 
+		 * @param  {string} name    
+		 * @param  {string} start   2016-01-10
+		 * @param  {string} due     2016-01-10
+		 * @param  {string} type    not used
+		 * @return {promise}
+		 */
+		query: function(contact, name, start, due, type){
+			let formData = new FormData();
+			formData.set('ctl00$ContentPlaceHolderMain$txtPrimaryContact', contact);
+			formData.set('ctl00$ContentPlaceHolderMain$txtProjectId', name);
+			formData.set('ctl00$ContentPlaceHolderMain$txtStartDate', start);
+			formData.set('ctl00$ContentPlaceHolderMain$txtDueDate', due);
+			return new Promise(function(resolve, reject){
+				axios.post('http://iems.shinetechchina.com.cn/MyIems/taskes/mytaskeslist.aspx', formData).then(function(response){
+					let html = response.data;
+					let div = document.createElement('div');
+					div.innerHTML = html;
+					let table = div.querySelector('#ContentPlaceHolderMain_grvEmployeeWorkload');
+					let trs = table.querySelectorAll('tr[align=left]');
+					var items = [];
+					trs.forEach(function(tr, index){
+						var tds = tr.querySelectorAll('td');
+						let item = {
+							name: tds[0].textContent.trim(),
+							primary_contact: tds[1].textContent.trim(),
+							project_name: tds[2].textContent.trim(),
+							po_no: tds[3].textContent.trim(),
+							work_date: tds[4].textContent.trim(),
+							title: tds[5].textContent.trim(),
+							work_hours: parseFloat(tds[6].textContent.trim()),
+							description: tds[7].textContent.trim(),
+							type: tds[8].textContent.trim()
+						};
+						items.push(item);
+						items.total = items.total ? items.total + item.work_hours : item.work_hours;
+					});
+					resolve(items);
+				}).catch(function(){
+					resolve([]);
+				});
+			});
+		}
 	};
 }
 
-module.exports.install = function(Vue){
-	Vue.prototype.$Auth = Auth();
-	Vue.prototype.$Project = Project();
-	Vue.prototype.$History = History();
-	Vue.prototype.$Utility = Utility();
+module.exports.install = function(v){
+	Vue = v;
+	Vue.prototype.$Auth = Vue.Auth = Auth(Vue);
+	Vue.prototype.$Project = Vue.Project = Project(Vue);
+	Vue.prototype.$History = Vue.History = History(Vue);
+	Vue.prototype.$Utility = Vue.Utility = Utility(Vue);
 }
