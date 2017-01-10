@@ -10,3 +10,6 @@ app/scripts
 
 main.css
 app/scripts.temp
+dist.crx
+dist.pem
+dist.zip
