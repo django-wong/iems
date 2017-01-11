@@ -2,11 +2,13 @@
 * @Author: Django Wong
 * @Date:   2017-01-09 12:17:22
 * @Last Modified by:   Django Wong
-* @Last Modified time: 2017-01-10 23:59:37
+* @Last Modified time: 2017-01-11 14:57:41
 * @File Name: services.js
 */
 
 'use strict';
+
+var moment = require('moment');
 
 FormData.toJson = function(formData){
 	var data = {};
@@ -17,6 +19,15 @@ FormData.toJson = function(formData){
 }
 
 var Vue;
+
+let DateRange = {
+	Today: [moment(), moment()],
+	Yesterday: [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+	Last7Days: [moment().subtract(6, 'days'), moment()],
+	Last30Days: [moment().subtract(29, 'days'), moment()],
+	ThisMonth: [moment().startOf('month'), moment().endOf('month')],
+	LastMonth: [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+}
 
 let Auth = function(Vue){
 	var email, password;
@@ -76,6 +87,16 @@ let Auth = function(Vue){
 					}
 					resolve(false);
 				});
+			});
+		},
+
+		logout: function(){
+			return new Promise(function(resolve, reject){
+				axios.post('http://iems.shinetechchina.com.cn/User/LogOff').then(function(response){
+					resolve(response.data.indexOf('log in') !== -1);
+				}).catch(function(){
+					resolve(false);
+				});;
 			});
 		},
 
@@ -317,6 +338,23 @@ let History = function(Vue){
 					resolve([]);
 				});
 			});
+		},
+
+		queryThisMonth: function(contact, name){
+			let start = DateRange.ThisMonth[0].format('YYYY-MM-DD');
+			let due = DateRange.ThisMonth[0].format('YYYY-MM-DD');
+			return this.query(contact, name, start, due);
+		},
+
+		queryToday: function(contact, name){
+			let today = moment().format('YYYY-MM-DD');
+			return this.query(contact, name, today, today);
+		},
+
+		queryLast7Days: function(contact, name){
+			let start = DateRange.Last7Days[0].format('YYYY-MM-DD');
+			let due = DateRange.Last7Days[0].format('YYYY-MM-DD');
+			return this.query(contact, name, today, today);
 		}
 	};
 }

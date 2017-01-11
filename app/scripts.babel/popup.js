@@ -7,6 +7,9 @@ var Services = require('./services.js');
 
 window.axios = require('axios');
 window.gravatar = require('gravatar.js');
+window.moment = require('moment');
+window.Metrics = require('metrics-graphics');
+window.d3 = require('d3');
 
 Vue.use(iView);
 Vue.use(VueRouter);

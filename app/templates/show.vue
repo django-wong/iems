@@ -23,6 +23,12 @@
         	<i-input type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="描述" :value.sync="desc"></i-input>
         	<i-button type="primary" icon="ios-color-wand" long v-on:click="record(item)">带我飞</i-button>
         </div>
+        <div id="grap">
+        	<Spin fix="true" v-if="loadingChart">
+	            <Icon type="load-c" size=18 class="spin-icon-load"></Icon>
+	            <div>Loading Chart</div>
+	        </Spin>
+        </div>
 	</div>
 </template>
 <script>
@@ -30,6 +36,49 @@
 		ready: function(){
 			let item = this.$Project.obtainProject(this.$route.params.id);
 			this.$data.item = item;
+			var self = this;
+			this.$History.queryThisMonth(item.PrimaryContact, item.ProjectName).then(function(items){
+				self.$data.loadingChart = false;
+				var days = moment().daysInMonth();
+				var dates = {};
+				for (var i = 1; i <= days; i++) {
+					let date = moment().set('date', i).format('YYYY-MM-DD');
+					dates[date] = {
+						hours: 0
+					};
+				}
+				items.forEach(function(item){
+					let date = item.work_date;
+					dates[date].hours += item.work_hours;
+				});
+				var data = [];
+				for(var i in dates){
+					data.push({
+						date: i,
+						hours: dates[i].hours
+					});
+				}
+				data = MG.convert.date(data, 'date');
+				Metrics.data_graphic({
+					title: `本月共计${items.total}小时`,
+					description: "一看就知道是啥，还用问？",
+					data: data,
+					width: 220,
+					height: 150,
+					target: '#grap',
+					x_accessor: 'date',
+					y_accessor: 'hours',
+					xax_count: 6,
+					animate_on_load: false,
+					show_tooltips: false,
+					interpolate: d3.curveLinear,
+					show_secondary_x_label: false,
+					left: 25,
+					right: 15,
+					center_title_full_width: true,
+					bottom: 20
+				});
+			});
 		},
 
 		data: function(){
@@ -38,7 +87,8 @@
 				hours: 0,
 				title: '',
 				desc: '',
-				item: {}
+				item: {},
+				loadingChart: true
 			};
 			return data;
 		},
@@ -67,6 +117,16 @@
 					if(status){
 						self.$Message.info(`记录成功`);
 					}
+				});
+			},
+
+			mail: function(item){
+				let date = (new Date()).toDateString();
+				chrome.runtime.sendMessage({
+					handler: 'mailto',
+					detail: {}
+				}, function(response) {
+					console.log(response);
 				});
 			}
 		}

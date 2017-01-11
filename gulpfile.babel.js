@@ -51,7 +51,7 @@ gulp.task('images', () => {
     }))
     .on('error', function (err) {
       console.log(err);
-      this.end();
+      this.end();``
     })))
     .pipe(gulp.dest('dist/images'));
 });
@@ -99,10 +99,13 @@ gulp.task('webpack', ['babel'], () => {
   return gulp.src('app/scripts.temp/**/*.js')
       .pipe(named())
       .pipe(webpack(require('./webpack.config.js')))
-      .pipe(gulp.dest('app/scripts'));
+      .pipe(gulp.dest('app/scripts'))
+      .on('end', function(){
+        del(['app/scripts.temp']);
+      });
 });
 
-gulp.task('clean', del.bind(null, ['.tmp', 'dist', 'app/scripts.temp']));
+gulp.task('clean', del.bind(null, ['.tmp', 'dist', 'app/scripts.temp', 'app/styles.temp']));
 
 gulp.task('watch', ['lint', 'style', 'webpack'], () => {
   $.livereload.listen();
@@ -121,10 +124,27 @@ gulp.task('watch', ['lint', 'style', 'webpack'], () => {
   gulp.watch('bower.json', ['wiredep']);
 });
 
-gulp.task('style', () => {
-  return gulp.src('app/styles/less/main.less')
-    .pipe($.less())
-    .pipe(gulp.dest('app/styles'));
+gulp.task('less', function(){
+    return gulp.src('app/styles/less/main.less')
+      .pipe($.less())
+      .pipe(gulp.dest('app/styles.temp'));
+});
+
+gulp.task('css', function(){
+  return gulp.src('node_modules/metrics-graphics/dist/metricsgraphics.css')
+    .pipe(gulp.dest('app/styles.temp'));
+});
+
+gulp.task('style', ['less', 'css'], () => {
+  return gulp.src([
+      'app/styles.temp/metricsgraphics.css',
+      'app/styles.temp/main.css'
+    ])
+    .pipe($.concat('main.css'))
+    .pipe(gulp.dest('app/styles'))
+    .on('end', function(){
+      del(['app/styles.temp']);
+    });
 });
 
 gulp.task('size', () => {

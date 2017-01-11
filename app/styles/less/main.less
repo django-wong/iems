@@ -1,6 +1,24 @@
 @import "../../../node_modules/iview/src/styles/index.less";
 
 /**
+ * rewrite metricsgraphics.css
+ */
+
+.mg-x-axis text, .mg-y-axis text, .mg-histogram .axis text {
+    fill: black;
+    font-size: 0.6rem;
+    opacity: 0.6;
+}
+
+tspan.mg-chart-title {
+    font-size: 0.6em;
+}
+
+.mg-active-datapoint {
+	font-size: 0.8em;
+}
+
+/**
  * Custom styles
  */
 
@@ -51,6 +69,12 @@ hr.featured {
 	opacity: .2;
 }
 
+.ivu-card-body {
+	p {
+		font-size: 12px;
+	}
+}
+
 #dashboard, #show {
 
 	hr {
@@ -63,10 +87,11 @@ hr.featured {
 		.ivu-card-body {
 			&> p {
 				line-height: 24px;
-				
+				font-size: 12px;
+
 				span {
 					position: absolute;
-					left: 106px;
+					left: 100px;
 				}
 			}
 
@@ -183,4 +208,13 @@ hr.featured {
 
 #account, #dashboard, #login {
 	position: relative;
+}
+
+#grap {
+	overflow-x: scroll;
+	margin-bottom: 15px;
+
+	&:hover{
+		background-color: rgba(253,253,253, .7);
+	}
 }
