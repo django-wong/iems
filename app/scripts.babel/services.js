@@ -2,7 +2,7 @@
 * @Author: Django Wong
 * @Date:   2017-01-09 12:17:22
 * @Last Modified by:   Django Wong
-* @Last Modified time: 2017-01-11 14:57:41
+* @Last Modified time: 2017-01-16 21:07:42
 * @File Name: services.js
 */
 
@@ -192,7 +192,7 @@ let Project = function(Vue){
 							// 额外的属性
 							$num: index < 10 ? `0${index}` : index,
 							data: {
-								hours: 0,
+								hours: 8,
 								recording: false,
 								title: '',
 								desc: ''

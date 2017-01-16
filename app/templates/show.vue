@@ -84,7 +84,7 @@
 		data: function(){
 			var self = this;
 			var data = {
-				hours: 0,
+				hours: 8,
 				title: '',
 				desc: '',
 				item: {},
