@@ -51,7 +51,7 @@ gulp.task('images', () => {
     }))
     .on('error', function (err) {
       console.log(err);
-      this.end();``
+      this.end();
     })))
     .pipe(gulp.dest('dist/images'));
 });
