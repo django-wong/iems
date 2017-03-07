@@ -30,7 +30,7 @@ body {
 	font-family: "Helvetica Neue",Helvetica,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","微软雅黑",Arial,sans-serif;
 	width: 260px;
 	padding: 15px;
-	min-height: 300px;
+	min-height: 320px;
 }
 
 .main-title {
@@ -175,20 +175,34 @@ hr.featured {
 	}
 }
 
-.profile-card {
+.profile-card, .alarm-card {
 	 
 	 .ivu-card-head {
 	 
 	 	p {
-	
+			height: 28px;
+			line-height: 28px;
+
 			img {
-				height: 20px;
+				height: 28px;
 				float: left;
-				width: 20px;
+				width: 28px;
 				margin-right: 15px;
 			}
 	 	}
 	 } 
+}
+
+.project-card {
+	.project-action {
+		opacity: 0;
+	}
+
+	&:hover{
+		.project-action {
+			opacity: 1
+		}
+	}
 }
 
 .spin-icon-load {

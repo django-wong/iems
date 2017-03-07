@@ -3,6 +3,7 @@
 		<div class="header-center">
 			<Button-group size="small">
 		        <i-button type="ghost" v-link="{path: '/dashboard'}">项目</i-button>
+		        <i-button type="ghost" v-link="{path: '/alarm'}">定时任务</i-button>
 		        <i-button type="ghost" v-link="{path: '/account'}" class="active">个人</i-button>
 		    </Button-group>
 		</div>

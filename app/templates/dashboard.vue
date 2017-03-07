@@ -3,6 +3,7 @@
 		<div class="header-center">
 			<Button-group size="small">
 		        <i-button type="ghost" v-link="{path: '/dashboard'}" class="active">项目</i-button>
+		        <i-button type="ghost" v-link="{path: '/alarm'}">定时任务</i-button>
 		        <i-button type="ghost" v-link="{path: '/account'}">个人</i-button>
 		    </Button-group>
 		</div>
@@ -13,10 +14,11 @@
         </Spin>
 
 		<div v-for="item in items" track-by="$index">
-		    <Card :bordered="true" dis-hover>
+		    <Card :bordered="true" dis-hover class="project-card">
 	            <p slot="title">
-	            	<Icon v-if="item.stared" type="ios-star" v-on:click="toggleStar(item)"></Icon>
-	            	<Icon v-else type="ios-star-outline" v-on:click="toggleStar(item)"></Icon>
+	            	<!-- <Icon v-if="item.stared" type="ios-star" v-on:click="toggleStar(item)"></Icon>
+	            	<Icon v-else type="ios-star-outline" v-on:click="toggleStar(item)"></Icon> -->
+	            	<Icon class="project-action" type="gear-a" v-link="{path:'/preference/'+item.ProjectCode}"></Icon>
 	            	<a v-link="{path:'/show/'+item.ProjectCode}">{{ item.ProjectName }}</a>
 	            </p>
 				<p>主联系人: <span>{{ item.PrimaryContact }}</span></p>
@@ -44,18 +46,6 @@
 <script>
 	export default {
 		data: function(){
-			// setTimeout(function(){
-			// 	self.$Project.recordWorkload(items[0].ProjectCode, 1, 'IEMS JETPACK', 'IEMS JETPACK DESCRIPTIONS').then(function(status){
-			// 		console.info(status);
-			// 	});
-			// }, 5000);
-			
-			// setTimeout(function(){
-			// 	self.$History.query('', 'ODC', '2017-01-01', '2017-01-30').then(function(items){
-			// 		console.info(items);
-			// 	});
-			// }, 15000);
-
 			var self = this;
 			var data = {
 				items: [],

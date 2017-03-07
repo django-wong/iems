@@ -22,7 +22,9 @@
     "storage",
     "webRequest",
     "http://iems.shinetechchina.com.cn/",
-    "tabs"
+    "http://www.easybots.cn/",
+    "tabs",
+    "alarms"
   ],
   "browser_action": {
     "default_icon": {

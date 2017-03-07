@@ -2,13 +2,14 @@
 * @Author: Django Wong
 * @Date:   2017-01-09 12:17:22
 * @Last Modified by:   Django Wong
-* @Last Modified time: 2017-01-16 21:07:42
+* @Last Modified time: 2017-03-07 19:43:50
 * @File Name: services.js
 */
 
 'use strict';
 
 var moment = require('moment');
+var axios = require('axios');
 
 FormData.toJson = function(formData){
 	var data = {};
@@ -113,6 +114,8 @@ let Auth = function(Vue){
 					profile.YearHoliday = parseInt(div.querySelector('#ContentPlaceHolderMain_lblYearHoliday').textContent);
 					profile.RemainYearHoliday = parseInt(div.querySelector('#ContentPlaceHolderMain_lblRemainYearHoliday').textContent);
 					resolve(profile);
+				}, function(error){
+					reject(error);
 				});
 			});
 		}
@@ -121,6 +124,9 @@ let Auth = function(Vue){
 
 let Utility = function(Vue){
 	return {
+		HOLIDAY: '2',
+		WEEKEND: '1',
+		WORKDAY: '0',
 		getViewAndEventData: function(){
 			var that = this;
 			return new Promise(function(resolve, reject){
@@ -144,6 +150,62 @@ let Utility = function(Vue){
 				'__EVENTVALIDATION': div.querySelector('[name=__EVENTVALIDATION]').value
 			};
 			return data;
+		},
+
+		holidaysByMonths: function(month){
+			return new Promise(function(resolve, reject){
+				axios.get('http://www.easybots.cn/api/holiday.php', {
+					params: {
+						m: month
+					}
+				}).then(function(response){
+					resolve(response.data);
+				}, function(error){
+					reject(error);
+				})
+			});
+		},
+
+		holidaysByMonth: function(months){
+			return new Promise(function(resolve, reject){
+				axios.get('http://www.easybots.cn/api/holiday.php', {
+					params: {
+						m: months.join(',')
+					}
+				}).then(function(response){
+					resolve(response.data);
+				}, function(error){
+					reject(error);
+				})
+			});
+		},
+
+		holidaysByDates: function(dates){
+			return new Promise(function(resolve, reject){
+				axios.get('http://www.easybots.cn/api/holiday.php', {
+					params: {
+						d: dates.join(',')
+					}
+				}).then(function(response){
+					resolve(response.data);
+				}, function(error){
+					reject(error);
+				})
+			});
+		},
+
+		holidayOnDate: function(date){
+			return new Promise(function(resolve, reject){
+				axios.get('http://www.easybots.cn/api/holiday.php', {
+					params: {
+						d: date
+					}
+				}).then(function(response){
+					resolve(response.data);
+				}, function(error){
+					reject(error);
+				})
+			});
 		}
 	};
 };
@@ -151,7 +213,8 @@ let Utility = function(Vue){
 let Project = function(Vue){
 	var projects = [];
 	return {
-		getProjects: function(){
+		getProjects: async function(){
+			var preferences = await this.getProjectPerferences();
 			return new Promise(function(resolve, reject){
 				axios.get('http://iems.shinetechchina.com.cn/MyIems/taskes/mytaskes.aspx').then(function(response){
 					let div = document.createElement('div');
@@ -173,7 +236,7 @@ let Project = function(Vue){
 						let UnitPriceEle = div.querySelector(`#ContentPlaceHolderMain_rtPOs_Label1_${index}`);
 						let UnitEle = div.querySelector(`#ContentPlaceHolderMain_rtPOs_Label1_${index}`);
 						let TotalValueEle = div.querySelector(`#ContentPlaceHolderMain_rtPOs_Label3_${index}`);
-						let project = {
+						var project = {
 							HidIsOverTime: HidIsOverTimeEle ? (HidIsOverTimeEle.value.toUpperCase() === 'FALSE' ? false : true) : false,
 							PrimaryContact: PrimaryContactEle ? PrimaryContactEle.textContent : null,
 							ProjectCode: ProjectCodeEle ? ProjectCodeEle.textContent : null,
@@ -198,6 +261,12 @@ let Project = function(Vue){
 								desc: ''
 							}
 						};
+						let preference = preferences[project.projectCode];
+						if(preference && preference.hasOwnProperty('hours')){
+							project.data.hours = preference.hours;
+							project.data.title = preference.title;
+							project.data.desc = preference.desc;
+						}
 						let tr = div.querySelector(`#ContentPlaceHolderMain_rtPOs_tr1_${index}`);
 						if(tr){
 							project.FormData = new FormData();
@@ -216,13 +285,44 @@ let Project = function(Vue){
 					});
 					projects = items;
 					resolve(items);
+				}, function(error){
+					reject(error);
 				});
 			});
 		},
 
-		obtainProject: function(project_code){
+		zeus: function(){
+			var self = this;
+			return new Promise(function(resolve, reject){
+				self.getProjects().then(function(projects){
+					var successCount = 0;
+					var failCount = 0;
+					projects.forEach(function(project, index, projects){
+						let hours = project.data.hours;
+						let title = project.data.title;
+						let desc = project.data.desc;
+						self.recordWorkload(project, hours, title, desc).then(function(res){
+							if(res){
+								successCount++;
+							}else{
+								failCount++;
+							}
+							resolve({
+								successCount: successCount,
+								failCount: failCount,
+								total: projects.length
+							});
+						});
+					});
+				}, function(error){
+					reject(error);
+				});
+			});
+		},
+
+		obtainProject: function(ProjectCode){
 			for (var i = 0; i < projects.length; i++) {
-				if(projects[i].ProjectCode === project_code){
+				if(projects[i].ProjectCode === ProjectCode){
 					return projects[i];
 				}
 			}
@@ -280,14 +380,40 @@ let Project = function(Vue){
 			});
 		},
 
-		star: async function(project_code){
-			this.getStars().then(function(){
-
-			});
+		star: function(project_code){
+			// TODO: Start a project
 		},
 
 		unstar: function(project_code){
+			// TODO: Unstart the project
+		},
 
+		getProjectPerferences: function(){
+			return new Promise(function(resolve, reject){
+				chrome.storage.sync.get('preference.projects', function(items){
+					resolve(items['preference.projects'] || {});
+				});
+			});
+		},
+
+		setPerference: async function(projectCode, hours, title, desc){
+			var preferences = await this.getProjectPerferences();
+			var preference = await this.getPerference(projectCode);
+			preference.hours = hours;
+			preference.title = title;
+			preference.desc = desc;
+			preferences[projectCode] = preference;
+			chrome.storage.sync.set({
+				'preference.projects': preferences
+			});
+		},
+
+		getPerference: async function(projectCode){
+			var preferences = await this.getProjectPerferences();
+			if(preferences.hasOwnProperty(projectCode)){
+				return preferences[projectCode];
+			}
+			return {};
 		}
 	};
 }
@@ -365,4 +491,13 @@ module.exports.install = function(v){
 	Vue.prototype.$Project = Vue.Project = Project(Vue);
 	Vue.prototype.$History = Vue.History = History(Vue);
 	Vue.prototype.$Utility = Vue.Utility = Utility(Vue);
-}
+};
+
+module.exports.init = function(object){
+	object = typeof object === 'object' ? object : {};
+	object.Auth = Auth(object);
+	object.Project = Project(object);
+	object.History = History(object);
+	object.Utility = Utility(object);
+	return object;
+};

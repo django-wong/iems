@@ -36,6 +36,9 @@
 		ready: function(){
 			let item = this.$Project.obtainProject(this.$route.params.id);
 			this.$data.item = item;
+			this.$data.hours = item.data.hours;
+			this.$data.title = item.data.title;
+			this.$data.desc = item.data.desc;
 			var self = this;
 			this.$History.queryThisMonth(item.PrimaryContact, item.ProjectName).then(function(items){
 				self.$data.loadingChart = false;
