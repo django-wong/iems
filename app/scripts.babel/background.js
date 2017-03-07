@@ -136,7 +136,7 @@ chrome.storage.sync.get(['alarm.enabled', 'alarm.scheduledAt'], function(items){
 		'detail': {
 			'enabled': true,
 			'scheduledAt': time,
-			'silence': false
+			'silence': true
 		}
 	});
 	chrome.alarms.get('scheduled-apply', function(alarm){
