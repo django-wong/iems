@@ -16,7 +16,6 @@
   },
   "permissions": [
     "cookies",
-    "*://*.google.com/",
     "idle",
     "notifications",
     "storage",
