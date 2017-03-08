@@ -64,10 +64,12 @@
 		},
 
 		methods: {
-			exit: function(){
-				chrome.storage.sync.set({'password': ''});
-				window.close();
-				// TODO: SIGN OUT FROM IEMS
+			exit: async function(){
+				let logOff = await this.$Auth.logout();
+				if(logOff){
+					chrome.storage.sync.set({'password': ''});
+					window.close();
+				}
 			}
 		}
 	}
