@@ -2,7 +2,7 @@
 * @Author: Django Wong
 * @Date:   2017-01-09 12:17:22
 * @Last Modified by:   Django Wong
-* @Last Modified time: 2017-03-07 19:43:50
+* @Last Modified time: 2017-03-08 17:07:48
 * @File Name: services.js
 */
 
@@ -261,7 +261,7 @@ let Project = function(Vue){
 								desc: ''
 							}
 						};
-						let preference = preferences[project.projectCode];
+						let preference = preferences[project.ProjectCode];
 						if(preference && preference.hasOwnProperty('hours')){
 							project.data.hours = preference.hours;
 							project.data.title = preference.title;
@@ -361,7 +361,6 @@ let Project = function(Vue){
 					project.data.recording = false;
 					if(response.data.indexOf('添加成功') !== -1){
 						project.RemainingHours -= hours;
-						project.data.hours = 0;
 						resolve(true);
 					}
 					resolve(false);

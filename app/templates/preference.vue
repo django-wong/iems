@@ -40,7 +40,7 @@
 		methods: {
 			save: async function(item){
 				var self = this;
-				this.$Project.setPerference(item.projectCode, this.hours, this.title, this.desc).then(function(){
+				this.$Project.setPerference(item.ProjectCode, this.hours, this.title, this.desc).then(function(){
 					self.$Message.info(`${item.ProjectName}保存成功`);
 				});
 			}
