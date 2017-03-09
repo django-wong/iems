@@ -2,7 +2,7 @@
 * @Author: Django Wong
 * @Date:   2017-01-09 12:17:22
 * @Last Modified by:   Django Wong
-* @Last Modified time: 2017-03-08 17:07:48
+* @Last Modified time: 2017-03-09 15:13:08
 * @File Name: services.js
 */
 
@@ -293,7 +293,20 @@ let Project = function(Vue){
 
 		zeus: function(){
 			var self = this;
-			return new Promise(function(resolve, reject){
+			return new Promise(async function(resolve, reject){
+				var name = await Vue.Auth.checkUserName();
+				if(!name){
+					var certificate = await Vue.Auth.getEmailAndPassword();
+					if(!certificate.email || !certificate.password){
+						reject(new Error('Bad certificate.'));
+						return;
+					}
+					certificate.token = await Vue.Auth.getRequestVerificationToken();
+					if(!(await Vue.Auth.login(certificate))){
+						reject(new Error('Login failed'));
+						return;
+					}
+				}
 				self.getProjects().then(function(projects){
 					var successCount = 0;
 					var failCount = 0;
@@ -307,11 +320,13 @@ let Project = function(Vue){
 							}else{
 								failCount++;
 							}
-							resolve({
-								successCount: successCount,
-								failCount: failCount,
-								total: projects.length
-							});
+							if((successCount + failCount) === projects.length){
+								resolve({
+									successCount: successCount,
+									failCount: failCount,
+									total: projects.length
+								});
+							}
 						});
 					});
 				}, function(error){

@@ -57,10 +57,6 @@ window.addEventListener('scheduled-apply', function(event){
 		if(!enabled || !scheduledAt.isValid()){
 			return;
 		}
-		// Prepare next alarm
-		let time = scheduledAt.format('HH:mm:ss');
-		let next = moment().add(1, 'day').transform(time);
-		// let next = moment().add(15, 's'); //Debug only
 
 		let today = moment().format('YYYYMMDD');
 		let result = await Services.Utility.holidayOnDate(today);
@@ -84,14 +80,10 @@ window.addEventListener('scheduled-apply', function(event){
 					console.info('ALL GOOD');
 				}
 				notify(`成功：${result.successCount}，失败：${result.failCount}，总计：${result.total}`);
-			}, function(){
-				notify('好像哪里出错了～ ')
+			}, function(e){
+				notify(`好像哪里出错了～ \n ${e.toString()}`)
 			});
 		}
-
-		chrome.alarms.create('scheduled-apply', {
-			'when': next.valueOf()
-		});
 	});
 	
 });
@@ -106,7 +98,8 @@ window.addEventListener('on-alarm-properties-change', function(event){
 	let now = moment();
 	let when = today >= now ? today : tomorrow;
 	chrome.alarms.create('scheduled-apply', {
-		'when': when.valueOf()
+		'when': when.valueOf(),
+		'periodInMinutes': 1440
 	});
 	if(!event.detail.silence){
 		chrome.notifications.create('test-message', {
@@ -122,6 +115,7 @@ window.addEventListener('on-alarm-properties-change', function(event){
 	}
 });
 
+// Restore the alarm incase for some reason the alarm dispeared
 chrome.storage.sync.get(['alarm.enabled', 'alarm.scheduledAt'], function(items){
 	if(!items || !items['alarm.enabled'] || !items['alarm.scheduledAt']){
 		return;
