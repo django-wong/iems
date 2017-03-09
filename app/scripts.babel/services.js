@@ -2,7 +2,7 @@
 * @Author: Django Wong
 * @Date:   2017-01-09 12:17:22
 * @Last Modified by:   Django Wong
-* @Last Modified time: 2017-03-08 17:07:48
+* @Last Modified time: 2017-03-09 17:44:56
 * @File Name: services.js
 */
 
@@ -92,6 +92,7 @@ let Auth = function(Vue){
 		},
 
 		logout: function(){
+			chrome.alarms.clearAll(console.log);
 			return new Promise(function(resolve, reject){
 				axios.post('http://iems.shinetechchina.com.cn/User/LogOff').then(function(response){
 					resolve(response.data.indexOf('log in') !== -1);
