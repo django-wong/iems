@@ -2,7 +2,7 @@
 * @Author: Django Wong
 * @Date:   2017-01-09 12:17:22
 * @Last Modified by:   Django Wong
-* @Last Modified time: 2017-03-10 17:10:16
+* @Last Modified time: 2017-03-10 18:52:47
 * @File Name: services.js
 */
 
@@ -259,7 +259,8 @@ let Project = function(Vue){
 								hours: 8,
 								recording: false,
 								title: '',
-								desc: ''
+								desc: '',
+								excluded: false
 							}
 						};
 						let preference = preferences[project.ProjectCode];
@@ -267,6 +268,7 @@ let Project = function(Vue){
 							project.data.hours = preference.hours;
 							project.data.title = preference.title;
 							project.data.desc = preference.desc;
+							project.data.excluded = preference.excluded;
 						}
 						let tr = div.querySelector(`#ContentPlaceHolderMain_rtPOs_tr1_${index}`);
 						if(tr){
@@ -298,37 +300,53 @@ let Project = function(Vue){
 				var name = await Vue.Auth.checkUserName();
 				if(!name){
 					var certificate = await Vue.Auth.getEmailAndPassword();
-					if(!certificate.email || !certificate.password){
+					certificate.token = await Vue.Auth.getRequestVerificationToken();
+					if(!certificate.email || !certificate.password || !certificate.token){
 						reject(new Error('Bad certificate.'));
 						return;
 					}
-					certificate.token = await Vue.Auth.getRequestVerificationToken();
 					if(!(await Vue.Auth.login(certificate))){
 						reject(new Error('Login failed'));
 						return;
 					}
 				}
 				self.getProjects().then(function(projects){
+					var total = projects.length;
 					var successCount = 0;
 					var failCount = 0;
+					if(total === 0){
+						resolve({
+							successCount: 0,
+							failCount: 0,
+							total: 0
+						});
+					}
+					var callback = function(res){
+						if(res){
+							successCount++;
+						}else{
+							failCount++;
+						}
+						if((successCount + failCount) === total){
+							resolve({
+								successCount: successCount,
+								failCount: failCount,
+								total: total
+							});
+						}
+					};
 					projects.forEach(function(project, index, projects){
 						let hours = project.data.hours;
 						let title = project.data.title;
 						let desc = project.data.desc;
-						self.recordWorkload(project, hours, title, desc).then(function(res){
-							if(res){
-								successCount++;
-							}else{
-								failCount++;
-							}
-							if((successCount + failCount) === projects.length){
-								resolve({
-									successCount: successCount,
-									failCount: failCount,
-									total: projects.length
-								});
-							}
-						});
+						let excluded = project.data.excluded;
+						if(excluded){
+							total--;
+							successCount--;
+							callback(true);
+							return;
+						}
+						self.recordWorkload(project, hours, title, desc).then(callback);
 					});
 				}, function(error){
 					reject(error);
@@ -411,12 +429,13 @@ let Project = function(Vue){
 			});
 		},
 
-		setPerference: async function(projectCode, hours, title, desc){
+		setPerference: async function(projectCode, hours, title, desc, excluded){
 			var preferences = await this.getProjectPerferences();
 			var preference = await this.getPerference(projectCode);
 			preference.hours = hours;
 			preference.title = title;
 			preference.desc = desc;
+			preference.excluded = excluded;
 			preferences[projectCode] = preference;
 			chrome.storage.sync.set({
 				'preference.projects': preferences

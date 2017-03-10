@@ -24,6 +24,7 @@ chrome.runtime.onMessage.addListener(function(message, sender, callback){
 });
 
 chrome.alarms.onAlarm.addListener(function(alarm){
+	console.info(`on alarm: ${alarm.name}`);
 	let event = new CustomEvent(alarm.name, {
 		detail: alarm
 	});
@@ -78,11 +79,14 @@ window.addEventListener('scheduled-apply', function(event){
 			Services.Project.zeus().then(function(result){
 				if((result.successCount + result.failCount) === result.total){
 					console.info('ALL GOOD');
+					console.table({result});
 				}
 				notify(`成功：${result.successCount}，失败：${result.failCount}，总计：${result.total}`);
 			}, function(e){
 				notify(`好像哪里出错了～ \n ${e.toString()}`)
 			});
+		}else{
+			console.info('今天不用填...');
 		}
 	});
 	
