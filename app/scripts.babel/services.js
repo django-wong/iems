@@ -2,7 +2,7 @@
 * @Author: Django Wong
 * @Date:   2017-01-09 12:17:22
 * @Last Modified by:   Django Wong
-* @Last Modified time: 2017-03-10 18:52:47
+* @Last Modified time: 2017-03-14 17:13:33
 * @File Name: services.js
 */
 
@@ -388,6 +388,8 @@ let Project = function(Vue){
 
 		recordWorkload: async function(project, hours, title, desc){
 			project.data.recording = true;
+			let now = moment();
+			desc = desc || ''; desc = desc.replace(/{time}/g, now.format('HH:mm:ss'));
 			let formData = await this._prepareFormData(project, hours, title, desc);
 			let data = FormData.toJson(formData);
 			return new Promise(function(resolve, reject){
