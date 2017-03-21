@@ -26,7 +26,6 @@
         <div id="grap">
         	<Spin fix="true" v-if="loadingChart">
 	            <Icon type="load-c" size=18 class="spin-icon-load"></Icon>
-	            <div>Loading Chart</div>
 	        </Spin>
         </div>
 	</div>

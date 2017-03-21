@@ -31,6 +31,24 @@ body {
 	width: 260px;
 	padding: 15px;
 	min-height: 320px;
+
+	&:before, &:after {
+		height: 15px;
+		position: fixed;
+		width: 260px;
+		left: 0px;
+		content: ' ';
+		z-index: 9999;
+		background-color: inherit;
+	}
+
+	&:before {
+		top: 0px;
+	}
+
+	&:after {
+		bottom: 0px;
+	}
 }
 
 .main-title {
