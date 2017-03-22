@@ -2,9 +2,9 @@
 	<div id="alarm" class="has-float-footer">
 		<div class="header-center">
 			<Button-group size="small">
-		        <i-button type="ghost" v-link="{path: '/dashboard'}">项目</i-button>
-		        <i-button type="ghost" v-link="{path: '/alarm'}" class="active">定时任务</i-button>
-		        <i-button type="ghost" v-link="{path: '/account'}">个人</i-button>
+		        <i-button type="ghost" v-link="{path: '/dashboard'}">{{ 'projects' | i18n }}</i-button>
+		        <i-button type="ghost" v-link="{path: '/alarm'}" class="active">{{ 'cron' | i18n }}</i-button>
+		        <i-button type="ghost" v-link="{path: '/account'}">{{ 'me' | i18n }}</i-button>
 		    </Button-group>
 		</div>
 
@@ -12,23 +12,24 @@
             <p slot="title">
             	<span>
 					<Switch :checked.sync="alarm.enabled" size="large" @on-change="onSwitch">
-						<span slot="open">开</span>
-						<span slot="close">关</span>
+						<span slot="open">{{ 'on' | i18n }}</span>
+						<span slot="close">{{ 'off' | i18n }}</span>
 					</Switch>
-					<span>工作日自动填</span>
+					<span>{{ 'autoFill' | i18n }}</span>
             	</span>
             </p>
             <div>
-				<Time-picker type="time" placeholder="选择时间" :disabled="!alarm.enabled" :value.sync="alarm.scheduledAt" :editable="false"></Time-picker>
+				<Time-picker type="time" placeholder="Time" :disabled="!alarm.enabled" :value.sync="alarm.scheduledAt" :editable="false"></Time-picker>
             </div>
             <br/>
-            <i-button type="success" long :disabled="!alarm.enabled" @click="onConfirm">确认</i-button>
+            <i-button type="success" long :disabled="!alarm.enabled" @click="onConfirm">{{ 'confirmed' | i18n }}</i-button>
         </Card>
 	</div>
 </template>
 
 <script>
 	var moment = require('moment');
+	var i18n = chrome.i18n.getMessage;
 	window.moment = moment;
 	export default {
 		ready: function(){

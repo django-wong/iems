@@ -24,7 +24,7 @@
   	"description": ""
   },
   "me": {
-  	"message": "Me",
+  	"message": "Profile",
   	"description": ""
   },
   "primaryContact": {
@@ -76,7 +76,7 @@
   	"description": ""
   },
   "totalValue": {
-  	"message": "Total Val.",
+  	"message": "Total Value",
   	"description": ""
   },
   "hours": {
@@ -198,7 +198,47 @@
   	"description": ""
   },
   "hour": {
-    "message": "小时",
+    "message": " Hour(s)",
+    "description": ""
+  },
+  "applyAll": {
+    "message": "Apply All",
+    "description": ""
+  },
+  "kidding": {
+    "message": "Are you kidding me?",
+    "description": ""
+  },
+  "recorded": {
+    "message": "Recorded",
+    "description": ""
+  },
+  "recordFailed": {
+    "message": "Record Failed",
+    "description": ""
+  },
+  "embarrassed": {
+    "message": "So embarrassed...",
+    "description": ""
+  },
+  "chooseTime": {
+    "message": "Time",
+    "description": ""
+  },
+  "confirmed": {
+    "message": "Ok",
+    "description": ""
+  },
+  "fetchTokenFailed": {
+    "message": "Fetch token failed",
+    "description": ""
+  },
+  "saved": {
+    "message": "Saved",
+    "description": ""
+  },
+  "day": {
+    "message": " Day(s)",
     "description": ""
   }
 }

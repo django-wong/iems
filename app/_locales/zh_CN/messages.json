@@ -24,7 +24,7 @@
     "description": ""
   },
   "me": {
-    "message": "我",
+    "message": "个人",
     "description": ""
   },
   "primaryContact": {
@@ -199,6 +199,50 @@
   },
   "hour": {
     "message": "小时",
+    "description": ""
+  },
+  "applyAll": {
+    "message": "一键领工资",
+    "description": ""
+  },
+  "kidding": {
+    "message": "你填个零让我怎么想?",
+    "description": ""
+  },
+  "recorded": {
+    "message": "纪录成功",
+    "description": ""
+  },
+  "recordFailed": {
+    "message": "纪录失败",
+    "description": ""
+  },
+  "embarrassed": {
+    "message": "好尴尬...",
+    "description": ""
+  },
+  "chooseTime": {
+    "message": "选择时间",
+    "description": ""
+  },
+  "confirmed": {
+    "message": "确认",
+    "description": ""
+  },
+  "fetchTokenFailed": {
+    "message": "获取Token失败",
+    "description": ""
+  },
+  "unmeetError": {
+    "message": "我也不知道为什么，反正登录失败了",
+    "description": ""
+  },
+  "saved": {
+    "message": "保存成功",
+    "description": ""
+  },
+  "day": {
+    "message": "天",
     "description": ""
   }
 }

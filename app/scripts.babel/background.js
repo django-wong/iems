@@ -1,8 +1,9 @@
 'use strict';
 
+var i18n = window.i18n = chrome.i18n.getMessage;
+
 var qs = require('query-string');
 var moment = require('moment');
-var i18n = chrome.i18n.getMessage;
 require('moment-transform');
 var imagePath = chrome.extension.getURL('images');
 var Services = require('./services.js').init({});
@@ -82,9 +83,9 @@ window.addEventListener('scheduled-apply', function(event){
 					console.info('ALL GOOD');
 					console.table({result});
 				}
-				notify(`成功：${result.successCount}，失败：${result.failCount}，总计：${result.total}`);
+				notify(`${i18n('success')}：${result.successCount}，${i18n('fail')}：${result.failCount}，${i18n('total')}：${result.total}`);
 			}, function(e){
-				notify(`好像哪里出错了～ \n ${e.toString()}`)
+				notify(`${i18n('oops')} \n ${e.toString()}`)
 			});
 		}else{
 			console.info('今天不用填...');
