@@ -6,5 +6,199 @@
   "appDescription": {
     "message": "iems jetpack!",
     "description": "The description of the application"
+  },
+  "login": {
+  	"message": "Login",
+  	"description": "Login"
+  },
+  "logout": {
+  	"message": "Logout",
+  	"description": ""
+  },
+  "projects": {
+  	"message": "Projects",
+  	"description": ""
+  },
+  "cron": {
+  	"message": "Cron Job",
+  	"description": ""
+  },
+  "me": {
+  	"message": "Me",
+  	"description": ""
+  },
+  "primaryContact": {
+  	"message": "P. Contact",
+  	"description": ""
+  },
+  "projectCode": {
+  	"message": "Pr. Code",
+  	"description": ""
+  },
+  "projectName": {
+  	"message": "Pr. Name",
+  	"description": ""
+  },
+  "poType": {
+  	"message": "Po Type",
+  	"description": ""
+  },
+  "poNo": {
+  	"message": "Po No.",
+  	"description": ""
+  },
+  "dateSigned": {
+  	"message": "Date Signed",
+  	"description": ""
+  },
+  "startDate": {
+  	"message": "Start Date",
+  	"description": ""
+  },
+  "dueDate": {
+  	"message": "Due Date",
+  	"description": ""
+  },
+  "phHours": {
+  	"message": "Po Hours",
+  	"description": ""
+  },
+  "remainingHours": {
+  	"message": "Remainin' Hrs",
+  	"description": ""
+  },
+  "unitPrice": {
+  	"message": "Unit Price",
+  	"description": ""
+  },
+  "unit": {
+  	"message": "Unit",
+  	"description": ""
+  },
+  "totalValue": {
+  	"message": "Total Val.",
+  	"description": ""
+  },
+  "hours": {
+  	"message": "Hours",
+  	"description": ""
+  },
+  "title": {
+  	"message": "Title",
+  	"description": ""
+  },
+  "desc": {
+  	"message": "Description",
+  	"description": ""
+  },
+  "excluded": {
+  	"message": "Excluded",
+  	"description": ""
+  },
+  "employeeKey": {
+  	"message": "EMPLID",
+  	"description": ""
+  },
+  "employeeName": {
+  	"message": "EM. Name",
+  	"description": ""
+  },
+  "employeeStation": {
+  	"message": "EM. Station",
+  	"description": ""
+  },
+  "hr": {
+  	"message": "HR",
+  	"description": ""
+  },
+  "holidays": {
+  	"message": "Holidays",
+  	"description": ""
+  },
+  "remainHolidays": {
+  	"message": "Remainin' Holiday",
+  	"description": ""
+  },
+  "on": {
+  	"message": "ON",
+  	"description": ""
+  },
+  "off": {
+  	"message": "OFF",
+  	"description": ""
+  },
+  "ok": {
+  	"message": "Ok",
+  	"description": ""
+  },
+  "cancel": {
+  	"message": "Cancel",
+  	"description": ""
+  },
+  "autoFill": {
+  	"message": "Auto Fill in working days",
+  	"description": ""
+  },
+  "loading": {
+  	"message": "Loading",
+  	"description": ""
+  },
+  "welcome": {
+  	"message": "Welcome",
+  	"description": ""
+  },
+  "preference": {
+  	"message": "Preference",
+  	"description": ""
+  },
+  "save": {
+  	"message": "Save",
+  	"description": ""
+  },
+  "yes": {
+  	"message": "YES",
+  	"description": ""
+  },
+  "no": {
+  	"message": "NO",
+  	"description": ""
+  },
+  "letsRock": {
+  	"message": "Let's Rock!!",
+  	"description": ""
+  },
+  "totalInThisMonth": {
+    "message": "Total hours in this month: $hours$",
+    "description": "",
+    "placeholders": {
+      "hours": {
+        "content": "$1",
+        "example": "--"
+      }
+    }
+  },
+  "oops": {
+  	"message": "Somethin' went wrong...",
+  	"description": ""
+  },
+  "notToday": {
+  	"message": "Not Today",
+  	"description": ""
+  },
+  "success": {
+  	"message": "Success",
+  	"description": ""
+  },
+  "fail": {
+  	"message": "Fail",
+  	"description": ""
+  },
+  "total": {
+  	"message": "Total",
+  	"description": ""
+  },
+  "hour": {
+    "message": "小时",
+    "description": ""
   }
 }

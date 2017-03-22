@@ -1,0 +1,204 @@
+{
+  "appName": {
+    "message": "iems",
+    "description": "The name of the application"
+  },
+  "appDescription": {
+    "message": "iems jetpack!",
+    "description": "The description of the application"
+  },
+  "login": {
+    "message": "登录",
+    "description": "Login"
+  },
+  "logout": {
+    "message": "登出",
+    "description": ""
+  },
+  "projects": {
+    "message": "项目",
+    "description": ""
+  },
+  "cron": {
+    "message": "定时任务",
+    "description": ""
+  },
+  "me": {
+    "message": "我",
+    "description": ""
+  },
+  "primaryContact": {
+    "message": "主联系人",
+    "description": ""
+  },
+  "projectCode": {
+    "message": "项目编号",
+    "description": ""
+  },
+  "projectName": {
+    "message": "项目名称",
+    "description": ""
+  },
+  "poType": {
+    "message": "Po类型",
+    "description": ""
+  },
+  "poNo": {
+    "message": "Po编号",
+    "description": ""
+  },
+  "dateSigned": {
+    "message": "签订日期",
+    "description": ""
+  },
+  "startDate": {
+    "message": "开始日期",
+    "description": ""
+  },
+  "dueDate": {
+    "message": "结束日期",
+    "description": ""
+  },
+  "phHours": {
+    "message": "总小时数",
+    "description": ""
+  },
+  "remainingHours": {
+    "message": "剩余小时数",
+    "description": ""
+  },
+  "unitPrice": {
+    "message": "单价",
+    "description": ""
+  },
+  "unit": {
+    "message": "单位",
+    "description": ""
+  },
+  "totalValue": {
+    "message": "总价",
+    "description": ""
+  },
+  "hours": {
+    "message": "小时数",
+    "description": ""
+  },
+  "title": {
+    "message": "标题",
+    "description": ""
+  },
+  "desc": {
+    "message": "描述",
+    "description": ""
+  },
+  "excluded": {
+    "message": "排除",
+    "description": ""
+  },
+  "employeeKey": {
+    "message": "工号",
+    "description": ""
+  },
+  "employeeName": {
+    "message": "姓名",
+    "description": ""
+  },
+  "employeeStation": {
+    "message": "岗位",
+    "description": ""
+  },
+  "hr": {
+    "message": "HR",
+    "description": ""
+  },
+  "holidays": {
+    "message": "总年假",
+    "description": ""
+  },
+  "remainHolidays": {
+    "message": "剩余年假",
+    "description": ""
+  },
+  "on": {
+    "message": "开",
+    "description": ""
+  },
+  "off": {
+    "message": "关",
+    "description": ""
+  },
+  "ok": {
+    "message": "好",
+    "description": ""
+  },
+  "cancel": {
+    "message": "取消",
+    "description": ""
+  },
+  "autoFill": {
+    "message": "工作日自动填",
+    "description": ""
+  },
+  "loading": {
+    "message": "加载中",
+    "description": ""
+  },
+  "welcome": {
+    "message": "欢迎",
+    "description": ""
+  },
+  "preference": {
+    "message": "项目偏好设置",
+    "description": ""
+  },
+  "save": {
+    "message": "保存",
+    "description": ""
+  },
+  "yes": {
+    "message": "好的",
+    "description": ""
+  },
+  "no": {
+    "message": "算了",
+    "description": ""
+  },
+  "letsRock": {
+    "message": "带我飞",
+    "description": ""
+  },
+    "totalInThisMonth": {
+      "message": "本月总计$hours$小时",
+      "description": "",
+      "placeholders": {
+        "hours": {
+          "content": "$1",
+          "example": "--"
+        }
+      }
+    },
+  "oops": {
+    "message": "好像哪儿不对劲儿",
+    "description": ""
+  },
+  "notToday": {
+    "message": "今天不需要填",
+    "description": ""
+  },
+  "success": {
+    "message": "成功",
+    "description": ""
+  },
+  "fail": {
+    "message": "失败",
+    "description": ""
+  },
+  "total": {
+    "message": "总计",
+    "description": ""
+  },
+  "hour": {
+    "message": "小时",
+    "description": ""
+  }
+}

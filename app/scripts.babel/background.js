@@ -2,6 +2,7 @@
 
 var qs = require('query-string');
 var moment = require('moment');
+var i18n = chrome.i18n.getMessage;
 require('moment-transform');
 var imagePath = chrome.extension.getURL('images');
 var Services = require('./services.js').init({});
