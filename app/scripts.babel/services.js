@@ -2,7 +2,7 @@
 * @Author: Django Wong
 * @Date:   2017-01-09 12:17:22
 * @Last Modified by:   Django Wong
-* @Last Modified time: 2017-03-14 17:13:33
+* @Last Modified time: 2017-03-31 22:46:03
 * @File Name: services.js
 */
 
@@ -153,7 +153,7 @@ let Utility = function(Vue){
 			return data;
 		},
 
-		holidaysByMonths: function(month){
+		holidaysByMonth: function(month){
 			return new Promise(function(resolve, reject){
 				axios.get('http://www.easybots.cn/api/holiday.php', {
 					params: {
@@ -167,7 +167,7 @@ let Utility = function(Vue){
 			});
 		},
 
-		holidaysByMonth: function(months){
+		holidaysByMonths: function(months){
 			return new Promise(function(resolve, reject){
 				axios.get('http://www.easybots.cn/api/holiday.php', {
 					params: {
