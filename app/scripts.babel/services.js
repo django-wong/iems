@@ -2,7 +2,7 @@
 * @Author: Django Wong
 * @Date:   2017-01-09 12:17:22
 * @Last Modified by:   Django Wong
-* @Last Modified time: 2017-05-05 02:39:40
+* @Last Modified time: 2017-05-05 02:53:29
 * @File Name: services.js
 */
 
@@ -149,14 +149,12 @@ let Utility = function(Vue){
 				axios.get('http://iems.shinetechchina.com.cn/MyIems/taskes/mytaskes.aspx').then(function(response){
 					let div = document.createElement('div');
 					let data = that.extractViewAndEventDataFromHTML(response.data);
-					console.info(data);
 					resolve(data);
 				});
 			});
 		},
 
 		daysInMonth(month, year) {
-			console.info(month, year);
 			return new Date(year, month, 0).getDate();
 		},
 
@@ -238,7 +236,6 @@ let Utility = function(Vue){
 			return new Promise(async (resolve) => {
 				var date = moment(month, format);
 				var days = this.daysInMonth(date.month()+1, date.year());
-				console.info(days);
 				var m = date.format('YYYYMM');
 				var holidays = await this.holidaysByMonth(date.format('YYYYMM'));
 				resolve((days - this.sizeof(holidays[m]))*8);
