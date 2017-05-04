@@ -167,7 +167,11 @@
     "message": "带我飞",
     "description": ""
   },
-    "totalInThisMonth": {
+  "totalHoursInThisMonth": {
+    "message": "Total Hours This Month",
+    "description": ""
+  },
+  "totalInThisMonth": {
       "message": "本月总计$hours$小时",
       "description": "",
       "placeholders": {

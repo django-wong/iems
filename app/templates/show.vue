@@ -24,7 +24,7 @@
         	<i-button type="primary" icon="ios-color-wand" long v-on:click="record(item)">{{ 'letsRock' | i18n }}</i-button>
         </div>
         <div id="grap">
-        	<Spin fix="true" v-if="loadingChart">
+        	<Spin :fix="true" v-if="loadingChart">
 	            <Icon type="load-c" size=18 class="spin-icon-load"></Icon>
 	        </Spin>
         </div>

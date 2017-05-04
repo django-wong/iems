@@ -10,7 +10,7 @@
 
 		<!-- <Spin size="large" fix v-if="!profile.RemainYearHoliday"></Spin> -->
 
-		<Spin fix="true" v-if="!profile.RemainYearHoliday">
+		<Spin :fix="true" v-if="!profile.RemainYearHoliday">
             <Icon type="load-c" size=18 class="spin-icon-load"></Icon>
             <div>{{ 'loading' | i18n }}</div>
         </Spin>
@@ -26,6 +26,8 @@
 				<p>{{ 'hr' | i18n }}：<span v-text="profile.EmployeeHr"></span></p>
 				<p>{{ 'holidays' | i18n }}：<span v-text="profile.YearHoliday"></span>{{ 'day' | i18n }}</p>
 				<p>{{ 'remainHolidays' | i18n }}：<span v-text="profile.RemainYearHoliday"></span>{{ 'day' | i18n }}</p>
+				<hr>
+				<p>{{ 'totalHoursInThisMonth' | i18n }}: <span v-text="totalHoursInThisMonth"></span>{{ 'hour' | i18n }}</p>
             </div>
         </Card>
 
@@ -52,7 +54,9 @@
 			});
 			this.$Auth.checkUserName().then(function(name){
 				self.name = name;
-				console.info(name);
+			});
+			this.$Utility.totalHoursInThisMonth().then((hours) => {
+				self.totalHoursInThisMonth = hours;
 			});
 		},
 
@@ -60,7 +64,8 @@
 			return {
 				email: '',
 				gravatar: '',
-				profile: {}
+				profile: {},
+				totalHoursInThisMonth: 0
 			}
 		},
 

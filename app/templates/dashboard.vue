@@ -8,7 +8,7 @@
 		    </Button-group>
 		</div>
 
-		<Spin fix="true" v-if="loading">
+		<Spin :fix="true" v-if="loading">
             <Icon type="load-c" size=18 class="spin-icon-load"></Icon>
             <div>{{ 'loading' | i18n }}</div>
         </Spin>

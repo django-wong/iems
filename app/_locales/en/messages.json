@@ -167,6 +167,10 @@
   	"message": "Let's Rock!!",
   	"description": ""
   },
+  "totalHoursInThisMonth": {
+    "message": "Total Hours This Month",
+    "description": ""
+  },
   "totalInThisMonth": {
     "message": "Total hours in this month: $hours$",
     "description": "",

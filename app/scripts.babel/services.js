@@ -2,7 +2,7 @@
 * @Author: Django Wong
 * @Date:   2017-01-09 12:17:22
 * @Last Modified by:   Django Wong
-* @Last Modified time: 2017-03-31 22:46:03
+* @Last Modified time: 2017-05-05 02:39:40
 * @File Name: services.js
 */
 
@@ -17,7 +17,7 @@ FormData.toJson = function(formData){
 		data[name] = value;
 	});
 	return data;
-}
+};
 
 var Vue;
 
@@ -28,7 +28,7 @@ let DateRange = {
 	Last30Days: [moment().subtract(29, 'days'), moment()],
 	ThisMonth: [moment().startOf('month'), moment().endOf('month')],
 	LastMonth: [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
-}
+};
 
 let Auth = function(Vue){
 	var email, password;
@@ -128,6 +128,21 @@ let Utility = function(Vue){
 		HOLIDAY: '2',
 		WEEKEND: '1',
 		WORKDAY: '0',
+
+		sizeof: function(object){
+			if(!(typeof object === 'object')){
+				return 0;
+			}
+			if(Array.isArray(object)){
+				return object.length;
+			}
+			var size = 0;
+			for(var i in object){
+				size += object.hasOwnProperty(i) ? 1 : 0;
+			}
+			return size;
+		},
+
 		getViewAndEventData: function(){
 			var that = this;
 			return new Promise(function(resolve, reject){
@@ -138,6 +153,11 @@ let Utility = function(Vue){
 					resolve(data);
 				});
 			});
+		},
+
+		daysInMonth(month, year) {
+			console.info(month, year);
+			return new Date(year, month, 0).getDate();
 		},
 
 		extractViewAndEventDataFromHTML: function(html){
@@ -206,6 +226,22 @@ let Utility = function(Vue){
 				}, function(error){
 					reject(error);
 				})
+			});
+		},
+
+		/**
+		 * Get total work hours in a month
+		 * @param  {mixed} month see: monment()
+		 * @return {[type]}       [description]
+		 */
+		totalHoursInThisMonth: async function(month, format){
+			return new Promise(async (resolve) => {
+				var date = moment(month, format);
+				var days = this.daysInMonth(date.month()+1, date.year());
+				console.info(days);
+				var m = date.format('YYYYMM');
+				var holidays = await this.holidaysByMonth(date.format('YYYYMM'));
+				resolve((days - this.sizeof(holidays[m]))*8);
 			});
 		}
 	};
@@ -452,7 +488,7 @@ let Project = function(Vue){
 			return {};
 		}
 	};
-}
+};
 
 let History = function(Vue){
 	return {
@@ -519,7 +555,7 @@ let History = function(Vue){
 			return this.query(contact, name, today, today);
 		}
 	};
-}
+};
 
 module.exports.install = function(v){
 	Vue = v;
