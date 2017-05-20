@@ -1,7 +1,9 @@
 {
+	"extends": "eslint:recommended",
 	"env": {
 		"node": true,
-		"browser": true
+		"browser": true,
+		"es6": true
 	},
 	"globals": {
 		"chrome": true
@@ -11,7 +13,8 @@
 		"quotes": [
 			2,
 			"single"
-		]
+		],
+		"no-console": "off"
 	},
 	"parserOptions": {
 		"ecmaVersion": 8,

@@ -2,7 +2,7 @@
 * @Author: Django Wong
 * @Date:   2017-01-09 12:17:22
 * @Last Modified by:   Django Wong
-* @Last Modified time: 2017-05-05 02:53:29
+* @Last Modified time: 2017-05-20 22:05:26
 * @File Name: services.js
 */
 
@@ -30,11 +30,10 @@ let DateRange = {
 	LastMonth: [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
 };
 
-let Auth = function(Vue){
-	var email, password;
+let Auth = function(){
 	return {
 		checkUserName: function(){
-			return new Promise(function(resolve, reject){
+			return new Promise(function(resolve){
 				axios.get('http://iems.shinetechchina.com.cn/Api/Core/Navigator').then(function(response){
 					resolve(response.data.Map.Title);
 				}).catch(function(){
@@ -44,7 +43,7 @@ let Auth = function(Vue){
 		},
 
 		getEmailAndPassword: function(){
-			return new Promise(function(resolve, reject){
+			return new Promise(function(resolve){
 				chrome.storage.sync.get(['email', 'password'], function(items){
 					resolve(items);
 				});
@@ -52,19 +51,19 @@ let Auth = function(Vue){
 		},
 
 		getRequestVerificationToken: function(){
-			return new Promise(function(resolve, reject){
+			return new Promise(function(resolve){
 				axios.get('http://iems.shinetechchina.com.cn/User/Login').then(function(response){
 					var div = document.createElement('div');
 					div.innerHTML = response.data;
 					resolve(div.querySelector('[name="__RequestVerificationToken"]').value);
-				}).catch(function(error){
+				}).catch(function(){
 					resolve('');
 				});
 			});
 		},
 
 		login: function(certificate){
-			return new Promise(function(resolve, reject){
+			return new Promise(function(resolve){
 				axios.post('http://iems.shinetechchina.com.cn/User/Login', {
 					__RequestVerificationToken: certificate.token,
 					Email: certificate.email,
@@ -93,12 +92,12 @@ let Auth = function(Vue){
 
 		logout: function(){
 			chrome.alarms.clearAll(console.log);
-			return new Promise(function(resolve, reject){
+			return new Promise(function(resolve){
 				axios.post('http://iems.shinetechchina.com.cn/User/LogOff').then(function(response){
 					resolve(response.data.indexOf('log in') !== -1);
 				}).catch(function(){
 					resolve(false);
-				});;
+				});
 			});
 		},
 
@@ -123,7 +122,7 @@ let Auth = function(Vue){
 	}
 };
 
-let Utility = function(Vue){
+let Utility = function(){
 	return {
 		HOLIDAY: '2',
 		WEEKEND: '1',
@@ -145,9 +144,8 @@ let Utility = function(Vue){
 
 		getViewAndEventData: function(){
 			var that = this;
-			return new Promise(function(resolve, reject){
+			return new Promise(function(resolve){
 				axios.get('http://iems.shinetechchina.com.cn/MyIems/taskes/mytaskes.aspx').then(function(response){
-					let div = document.createElement('div');
 					let data = that.extractViewAndEventDataFromHTML(response.data);
 					resolve(data);
 				});
@@ -270,6 +268,10 @@ let Project = function(Vue){
 						let UnitPriceEle = div.querySelector(`#ContentPlaceHolderMain_rtPOs_Label1_${index}`);
 						let UnitEle = div.querySelector(`#ContentPlaceHolderMain_rtPOs_Label1_${index}`);
 						let TotalValueEle = div.querySelector(`#ContentPlaceHolderMain_rtPOs_Label3_${index}`);
+						
+						POTypeEle = POTypeEle || null;
+						UnitEle = UnitEle || null;
+
 						var project = {
 							HidIsOverTime: HidIsOverTimeEle ? (HidIsOverTimeEle.value.toUpperCase() === 'FALSE' ? false : true) : false,
 							PrimaryContact: PrimaryContactEle ? PrimaryContactEle.textContent : null,
@@ -307,13 +309,13 @@ let Project = function(Vue){
 						if(tr){
 							project.FormData = new FormData();
 							let inputs = tr.querySelectorAll('input');
-							inputs.forEach(function(input, index){
+							inputs.forEach(function(input){
 								project.FormData.append(input.name, input.value);
 							});
 
 							let next = tr.parentElement.parentElement.parentElement.nextElementSibling;
 							let hiddenInputs = next.querySelectorAll('input');
-							hiddenInputs.forEach(function(input, index){
+							hiddenInputs.forEach(function(input){
 								project.FormData.append(input.name, input.value);
 							});
 						}
@@ -368,7 +370,7 @@ let Project = function(Vue){
 							});
 						}
 					};
-					projects.forEach(function(project, index, projects){
+					projects.forEach(function(project){
 						let hours = project.data.hours;
 						let title = project.data.title;
 						let desc = project.data.desc;
@@ -424,8 +426,7 @@ let Project = function(Vue){
 			let now = moment();
 			desc = desc || ''; desc = desc.replace(/{time}/g, now.format('HH:mm:ss'));
 			let formData = await this._prepareFormData(project, hours, title, desc);
-			let data = FormData.toJson(formData);
-			return new Promise(function(resolve, reject){
+			return new Promise(function(resolve){
 				axios.post('http://iems.shinetechchina.com.cn/MyIems/taskes/mytaskes.aspx', formData).then(function(response){
 					project.data.recording = false;
 					if(response.data.indexOf('添加成功') !== -1){
@@ -441,7 +442,7 @@ let Project = function(Vue){
 		},
 
 		getStars: function(){
-			return new Promise(function(resolve, reject){
+			return new Promise(function(resolve){
 				chrome.storage.sync.get('stated-project', function(items){
 					resolve(items);
 				});
@@ -450,14 +451,16 @@ let Project = function(Vue){
 
 		star: function(project_code){
 			// TODO: Start a project
+			console.info(project_code);
 		},
 
 		unstar: function(project_code){
 			// TODO: Unstart the project
+			console.info(project_code);
 		},
 
 		getProjectPerferences: function(){
-			return new Promise(function(resolve, reject){
+			return new Promise(function(resolve){
 				chrome.storage.sync.get('preference.projects', function(items){
 					resolve(items['preference.projects'] || {});
 				});
@@ -487,7 +490,7 @@ let Project = function(Vue){
 	};
 };
 
-let History = function(Vue){
+let History = function(){
 	return {
 		/**
 		 * Query workload historis
@@ -495,16 +498,15 @@ let History = function(Vue){
 		 * @param  {string} name    
 		 * @param  {string} start   2016-01-10
 		 * @param  {string} due     2016-01-10
-		 * @param  {string} type    not used
 		 * @return {promise}
 		 */
-		query: function(contact, name, start, due, type){
+		query: function(contact, name, start, due){
 			let formData = new FormData();
 			formData.set('ctl00$ContentPlaceHolderMain$txtPrimaryContact', contact);
 			formData.set('ctl00$ContentPlaceHolderMain$txtProjectId', name);
 			formData.set('ctl00$ContentPlaceHolderMain$txtStartDate', start);
 			formData.set('ctl00$ContentPlaceHolderMain$txtDueDate', due);
-			return new Promise(function(resolve, reject){
+			return new Promise(function(resolve){
 				axios.post('http://iems.shinetechchina.com.cn/MyIems/taskes/mytaskeslist.aspx', formData).then(function(response){
 					let html = response.data;
 					let div = document.createElement('div');
@@ -512,7 +514,7 @@ let History = function(Vue){
 					let table = div.querySelector('#ContentPlaceHolderMain_grvEmployeeWorkload');
 					let trs = table.querySelectorAll('tr[align=left]');
 					var items = [];
-					trs.forEach(function(tr, index){
+					trs.forEach(function(tr){
 						var tds = tr.querySelectorAll('td');
 						let item = {
 							name: tds[0].textContent.trim(),
@@ -549,7 +551,7 @@ let History = function(Vue){
 		queryLast7Days: function(contact, name){
 			let start = DateRange.Last7Days[0].format('YYYY-MM-DD');
 			let due = DateRange.Last7Days[0].format('YYYY-MM-DD');
-			return this.query(contact, name, today, today);
+			return this.query(contact, name, start, due);
 		}
 	};
 };

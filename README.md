@@ -1,3 +1,8 @@
+[![Chrome Web Store](https://img.shields.io/chrome-web-store/d/ckidfgngmgahddfkgmhcbamconecldfi.svg)](https://chrome.google.com/webstore/detail/iems/ckidfgngmgahddfkgmhcbamconecldfi?hl=en-US)
+[![Chrome Web Store](https://img.shields.io/chrome-web-store/stars/ckidfgngmgahddfkgmhcbamconecldfi.svg)](https://chrome.google.com/webstore/detail/iems/ckidfgngmgahddfkgmhcbamconecldfi?hl=en-US)
+[![Chrome Web Store](https://img.shields.io/chrome-web-store/v/ckidfgngmgahddfkgmhcbamconecldfi.svg)](https://chrome.google.com/webstore/detail/iems/ckidfgngmgahddfkgmhcbamconecldfi?hl=en-US)
+[![Travis](https://img.shields.io/travis/django-wong/iems.svg)](https://travis-ci.org/django-wong/iems)
+
 ### IEMS JETPACK
 这个项目只是为了偷懒顺便尝试一下ES7新特性
 

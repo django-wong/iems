@@ -1,7 +1,6 @@
 'use strict';
 
 var i18n = window.i18n = chrome.i18n.getMessage;
-
 var qs = require('query-string');
 var moment = require('moment');
 require('moment-transform');
@@ -51,8 +50,7 @@ window.addEventListener('mailto', function(event){
 	});
 });
 
-window.addEventListener('scheduled-apply', function(event){
-	let alarm = event.detail;
+window.addEventListener('scheduled-apply', function(){
 	chrome.storage.sync.get(['alarm.enabled', 'alarm.scheduledAt'], async function(items){
 		// Preliminary checks
 		let enabled = items['alarm.enabled'];
@@ -70,7 +68,7 @@ window.addEventListener('scheduled-apply', function(event){
 				title: 'IEMS Jetpack',
 				message: `${message} \n`,
 				iconUrl: `${imagePath}/icon-128.png`
-			}, function(id){
+			}, function(){
 				if(chrome.runtime.lastError){
 					console.log(chrome.runtime.lastError.message);
 				}
@@ -113,7 +111,7 @@ window.addEventListener('on-alarm-properties-change', function(event){
 			'title': 'IEMS Jetpack',
 			'message': `我将在 ${today >= now ? '今天' : '下个工作日'} ${when.format('HH点mm分')} 时自动填写工作量，届时请保证Chrome正在运行。`,
 			'iconUrl': `${imagePath}/alarm.png`
-		}, function(id){
+		}, function(){
 			if(chrome.runtime.lastError){
 				console.log(chrome.runtime.lastError.message);
 			}
