@@ -6,7 +6,12 @@
 		"es6": true
 	},
 	"globals": {
-		"chrome": true
+		"chrome": true,
+		"gravatar": true,
+		"moment": true,
+		"Metrics": true,
+		"MG": true,
+		"d3": true
 	},
 	"rules": {
 		"eol-last": 0,
@@ -19,5 +24,8 @@
 	"parserOptions": {
 		"ecmaVersion": 8,
 		"sourceType": "module"
-	}
+	},
+	"plugins": [
+      "html"
+    ]
 }

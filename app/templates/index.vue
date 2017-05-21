@@ -31,7 +31,7 @@
 			return {
 				formInline: {
 					email: '',
-					password: '',
+					password: ''
 				},
 				loading: false
 			};
@@ -73,7 +73,6 @@
 
 		events: {
 			'logged-in': function() {
-				var self = this;
 				this.$router.go('/dashboard');
 				this.$data.loading = false;
 			}

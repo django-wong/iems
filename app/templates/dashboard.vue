@@ -72,7 +72,7 @@
 					if(status){
 						self.$Message.info(i18n('recorded'));
 					}else{
-						self.$Message.error(il8n('recordFailed'));
+						self.$Message.error(i18n('recordFailed'));
 					}
 				});
 			},
@@ -84,7 +84,7 @@
 						if(status){
 							self.$Message.info(`${item.ProjectName} ${i18n('recorded')}`);
 						}else{
-							self.$Message.error(`${item.ProjectName} ${il8n('recordFailed')}`);
+							self.$Message.error(`${item.ProjectName} ${i18n('recordFailed')}`);
 						}
 					});
 				});

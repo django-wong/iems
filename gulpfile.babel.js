@@ -19,7 +19,7 @@ gulp.task('extras', () => {
     '!app/scripts.babel',
     '!app/scripts.temp',
     '!app/*.json',
-    '!app/*.html',
+    '!app/*.html'
   ], {
     base: 'app',
     dot: true
@@ -34,7 +34,10 @@ function lint(files, options) {
   };
 }
 
-gulp.task('lint', lint('app/scripts.babel/**/*.js'));
+gulp.task('lint', lint([
+  'app/scripts.babel/**/*.js',
+  'app/templates/*.vue'
+]));
 
 gulp.task('images', () => {
   return gulp.src('app/images/**/*')

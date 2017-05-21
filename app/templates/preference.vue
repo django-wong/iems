@@ -35,7 +35,6 @@
 		},
 
 		data: function(){
-			var self = this;
 			var data = {
 				hours: 8,
 				title: '',

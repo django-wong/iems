@@ -29,7 +29,6 @@
 
 <script>
 	var moment = require('moment');
-	var i18n = chrome.i18n.getMessage;
 	window.moment = moment;
 	export default {
 		ready: function(){

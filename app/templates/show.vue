@@ -55,16 +55,16 @@
 					dates[date].hours += item.work_hours;
 				});
 				var data = [];
-				for(var i in dates){
+				for(var j in dates){
 					data.push({
-						date: i,
-						hours: dates[i].hours
+						date: j,
+						hours: dates[j].hours
 					});
 				}
 				data = MG.convert.date(data, 'date');
 				Metrics.data_graphic({
 					title: i18n('totalInThisMonth', [items.total]),
-					description: "一看就知道是啥，还用问？",
+					description: '一看就知道是啥，还用问？',
 					data: data,
 					width: 220,
 					height: 150,
@@ -85,7 +85,6 @@
 		},
 
 		data: function(){
-			var self = this;
 			var data = {
 				hours: 8,
 				title: '',
@@ -97,7 +96,7 @@
 		},
 
 		methods: {
-			toggleStar: function(item){
+			toggleStar: function(){
 				// TODO: STAR AND PINNED
 			},
 
@@ -123,8 +122,7 @@
 				});
 			},
 
-			mail: function(item){
-				let date = (new Date()).toDateString();
+			mail: function(){
 				chrome.runtime.sendMessage({
 					handler: 'mailto',
 					detail: {}
