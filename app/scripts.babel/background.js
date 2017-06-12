@@ -50,6 +50,7 @@ window.addEventListener('mailto', function(event){
 	});
 });
 
+
 window.addEventListener('scheduled-apply', function(){
 	chrome.storage.sync.get(['alarm.enabled', 'alarm.scheduledAt'], async function(items){
 		// Preliminary checks
@@ -61,7 +62,18 @@ window.addEventListener('scheduled-apply', function(){
 
 		let today = moment().format('YYYYMMDD');
 		let result = await Services.Utility.holidayOnDate(today);
+		let inHistories = await Services.History.inAutoApplyHistories(today);
+		
+		if(inHistories){
+			console.info('Already applied today');
+			return;
+		}
 
+		/**
+		 * Show a notify quickly
+		 * @param  {string} message 
+		 * @return {void}
+		 */
 		var notify = function(message){
 			chrome.notifications.create('test-message', {
 				type: chrome.notifications.TemplateType.BASIC,
@@ -85,11 +97,13 @@ window.addEventListener('scheduled-apply', function(){
 			}, function(e){
 				notify(`${i18n('oops')} \n ${e.toString()}`)
 			});
+			await Services.History.pushAutoApplyHostory(today);
 		}else{
 			console.info('今天不用填...');
+			await Services.History.cleanApplyHostories();
 		}
+		return;
 	});
-	
 });
 
 window.addEventListener('on-alarm-properties-change', function(event){

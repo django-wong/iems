@@ -2,7 +2,7 @@
 * @Author: Django Wong
 * @Date:   2017-01-09 12:17:22
 * @Last Modified by:   Django Wong
-* @Last Modified time: 2017-05-20 22:05:26
+* @Last Modified time: 2017-06-12 16:49:04
 * @File Name: services.js
 */
 
@@ -32,6 +32,10 @@ let DateRange = {
 
 let Auth = function(){
 	return {
+		/**
+		 * Get the user name
+		 * @return {promise<string>}
+		 */
 		checkUserName: function(){
 			return new Promise(function(resolve){
 				axios.get('http://iems.shinetechchina.com.cn/Api/Core/Navigator').then(function(response){
@@ -42,6 +46,10 @@ let Auth = function(){
 			});
 		},
 
+		/**
+		 * Get the user email and password from sync storage
+		 * @return {promise<object>} [description]
+		 */
 		getEmailAndPassword: function(){
 			return new Promise(function(resolve){
 				chrome.storage.sync.get(['email', 'password'], function(items){
@@ -50,6 +58,10 @@ let Auth = function(){
 			});
 		},
 
+		/**
+		 * Get request verification token
+		 * @return {promise<string>}
+		 */
 		getRequestVerificationToken: function(){
 			return new Promise(function(resolve){
 				axios.get('http://iems.shinetechchina.com.cn/User/Login').then(function(response){
@@ -62,6 +74,11 @@ let Auth = function(){
 			});
 		},
 
+		/**
+		 * Login to IEMS
+		 * @param  {object} certificate 
+		 * @return {primise<boolean>}             
+		 */
 		login: function(certificate){
 			return new Promise(function(resolve){
 				axios.post('http://iems.shinetechchina.com.cn/User/Login', {
@@ -90,6 +107,10 @@ let Auth = function(){
 			});
 		},
 
+		/**
+		 * Logout from IEMS
+		 * @return {promise<boolean>} 
+		 */
 		logout: function(){
 			chrome.alarms.clearAll(console.log);
 			return new Promise(function(resolve){
@@ -101,6 +122,10 @@ let Auth = function(){
 			});
 		},
 
+		/**
+		 * Get user profile
+		 * @return {promise<object>} 
+		 */
 		getUserProfile: function(){
 			return new Promise(function(resolve, reject){
 				axios.get('http://iems.shinetechchina.com.cn/MyIems/default.aspx').then(function(response){
@@ -128,6 +153,11 @@ let Utility = function(){
 		WEEKEND: '1',
 		WORKDAY: '0',
 
+		/**
+		 * The size of an object's own properties or the length of an array
+		 * @param  {mixed} object , object or array
+		 * @return {number}        
+		 */
 		sizeof: function(object){
 			if(!(typeof object === 'object')){
 				return 0;
@@ -142,6 +172,10 @@ let Utility = function(){
 			return size;
 		},
 
+		/**
+		 * Get view and event data, this data will be use to communicate with IEMS server
+		 * @return {promise<object>}
+		 */
 		getViewAndEventData: function(){
 			var that = this;
 			return new Promise(function(resolve){
@@ -152,10 +186,21 @@ let Utility = function(){
 			});
 		},
 
+		/**
+		 * How many days in this month
+		 * @param  {string} month mm
+		 * @param  {string} year  yyyy
+		 * @return {number}       
+		 */
 		daysInMonth(month, year) {
 			return new Date(year, month, 0).getDate();
 		},
 
+		/**
+		 * Extract view and event data from the HTML template
+		 * @param  {string} html 
+		 * @return {object}      
+		 */
 		extractViewAndEventDataFromHTML: function(html){
 			let div = document.createElement('div');
 			div.innerHTML = html;
@@ -169,6 +214,11 @@ let Utility = function(){
 			return data;
 		},
 
+		/**
+		 * The holidays collections in the month
+		 * @param  {string} month yyyymm
+		 * @return {promise<object>}       
+		 */
 		holidaysByMonth: function(month){
 			return new Promise(function(resolve, reject){
 				axios.get('http://www.easybots.cn/api/holiday.php', {
@@ -183,6 +233,11 @@ let Utility = function(){
 			});
 		},
 
+		/**
+		 * The holidays in the months
+		 * @param  {array<string>} months ['yyyymm']
+		 * @return {promise<object>}
+		 */
 		holidaysByMonths: function(months){
 			return new Promise(function(resolve, reject){
 				axios.get('http://www.easybots.cn/api/holiday.php', {
@@ -197,6 +252,11 @@ let Utility = function(){
 			});
 		},
 
+		/**
+		 * Get holidays by given dates
+		 * @param  {array<string>} dates ['yyyymmdd']
+		 * @return {promise<object>}       [description]
+		 */
 		holidaysByDates: function(dates){
 			return new Promise(function(resolve, reject){
 				axios.get('http://www.easybots.cn/api/holiday.php', {
@@ -211,6 +271,11 @@ let Utility = function(){
 			});
 		},
 
+		/**
+		 * The holiday data at this day
+		 * @param  {string} date yyyymmdd
+		 * @return {promise<object>}
+		 */
 		holidayOnDate: function(date){
 			return new Promise(function(resolve, reject){
 				axios.get('http://www.easybots.cn/api/holiday.php', {
@@ -245,6 +310,10 @@ let Utility = function(){
 let Project = function(Vue){
 	var projects = [];
 	return {
+		/**
+		 * Get all projects
+		 * @return {promise<array>} [description]
+		 */
 		getProjects: async function(){
 			var preferences = await this.getProjectPerferences();
 			return new Promise(function(resolve, reject){
@@ -329,6 +398,10 @@ let Project = function(Vue){
 			});
 		},
 
+		/**
+		 * Auto apply the projects according to the user setting
+		 * @return {promise<mixed>} object on resolved or an instance of Error on rejected
+		 */
 		zeus: function(){
 			var self = this;
 			return new Promise(async function(resolve, reject){
@@ -389,6 +462,11 @@ let Project = function(Vue){
 			});
 		},
 
+		/**
+		 * Get project data by project code
+		 * @param  {string} ProjectCode 
+		 * @return {object}             
+		 */
 		obtainProject: function(ProjectCode){
 			for (var i = 0; i < projects.length; i++) {
 				if(projects[i].ProjectCode === ProjectCode){
@@ -397,6 +475,14 @@ let Project = function(Vue){
 			}
 		},
 
+		/**
+		 * Private method to prepare form data for auto-apply work load
+		 * @param  {object} project 
+		 * @param  {number} hours   
+		 * @param  {string} title   
+		 * @param  {string} desc    
+		 * @return {formData}         
+		 */
 		_prepareFormData: async function(project, hours, title, desc){
 			let data = await Vue.Utility.getViewAndEventData();
 			let formData = project.FormData;
@@ -421,6 +507,14 @@ let Project = function(Vue){
 			return formData;
 		},
 
+		/**
+		 * Record work load
+		 * @param  {object} project 
+		 * @param  {number} hours   
+		 * @param  {string} title   
+		 * @param  {string} desc    
+		 * @return {promise<boolean>}         
+		 */
 		recordWorkload: async function(project, hours, title, desc){
 			project.data.recording = true;
 			let now = moment();
@@ -441,6 +535,10 @@ let Project = function(Vue){
 			});
 		},
 
+		/**
+		 * Get stared projects
+		 * @return {promise<object>} 
+		 */
 		getStars: function(){
 			return new Promise(function(resolve){
 				chrome.storage.sync.get('stated-project', function(items){
@@ -449,16 +547,30 @@ let Project = function(Vue){
 			});
 		},
 
+		/**
+		 * Star a project
+		 * @param  {string} project_code
+		 * @return {promise<boolean>}              
+		 */
 		star: function(project_code){
 			// TODO: Start a project
 			console.info(project_code);
 		},
 
+		/**
+		 * Unstar a project
+		 * @param  {string} project_code 
+		 * @return {promise<boolean>}              
+		 */
 		unstar: function(project_code){
 			// TODO: Unstart the project
 			console.info(project_code);
 		},
 
+		/**
+		 * Get the project preference
+		 * @return {promise<object>} 
+		 */
 		getProjectPerferences: function(){
 			return new Promise(function(resolve){
 				chrome.storage.sync.get('preference.projects', function(items){
@@ -467,6 +579,15 @@ let Project = function(Vue){
 			});
 		},
 
+		/**
+		 * Set the project preference
+		 * @param  {string} projectCode 
+		 * @param  {number} hours       
+		 * @param  {string} title       
+		 * @param  {string} desc        
+		 * @param  {boolean} excluded    
+		 * @return {void}             
+		 */
 		setPerference: async function(projectCode, hours, title, desc, excluded){
 			var preferences = await this.getProjectPerferences();
 			var preference = await this.getPerference(projectCode);
@@ -480,6 +601,11 @@ let Project = function(Vue){
 			});
 		},
 
+		/**
+		 * Get the project preferences
+		 * @param  {string} projectCode 
+		 * @return {object}             
+		 */
 		getPerference: async function(projectCode){
 			var preferences = await this.getProjectPerferences();
 			if(preferences.hasOwnProperty(projectCode)){
@@ -552,6 +678,64 @@ let History = function(){
 			let start = DateRange.Last7Days[0].format('YYYY-MM-DD');
 			let due = DateRange.Last7Days[0].format('YYYY-MM-DD');
 			return this.query(contact, name, start, due);
+		},
+
+		/**
+		 * Clean the apply histories
+		 * @see  this.autoApplyHistories
+		 * @return {promise<boolean>}
+		 */
+		cleanApplyHostories: function(){
+			return new Promise((resolve) => {
+				chrome.storage.sync.set({
+					'history.applies': {}
+				}, () => {
+					resolve(true)
+				});
+			});
+		},
+
+		/**
+		 * Get all appliy hostories, you shouldn't rely on this kind methods, as the histories will be clean at next holiday day 
+		 * @return {promise<object>}
+		 */
+		autoApplyHistories: function(){
+			return new Promise((resolve) => {
+				chrome.storage.sync.get('history.applies', (items) => {
+					resolve(items['history.applies'] || {});
+				});
+			});
+		},
+
+		/**
+		 * Determin is the given date in the apply histories
+		 * @see  this.autoApplyHistories
+		 * @param  {string} date yyyymmdd
+		 * @return {primise<boolean>}
+		 */
+		inAutoApplyHistories: function(date){
+			return new Promise(async (resolve) => {
+				let histories = await this.autoApplyHistories();
+				resolve(histories[date] !== undefined);
+			});
+		},
+
+		/**
+		 * Push auto-apply history to sync storage
+		 * @see  this.autoApplyHistories
+		 * @param  {string} date  yyyymmdd
+		 * @return {promise<boolean>}       
+		 */
+		pushAutoApplyHostory: function(date){
+			return new Promise(async (resolve) => {
+				let histories = this.autoApplyHistories();
+				histories[date] = true;
+				chrome.storage.sync.set({
+					'history.applies': histories
+				}, () => {
+					resolve(true);
+				});
+			})
 		}
 	};
 };
