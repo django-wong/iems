@@ -33,7 +33,7 @@
 	export default {
 		ready: function(){
 			var self = this;
-			chrome.storage.sync.get(['alarm.enabled', 'alarm.scheduledAt'], function(items){
+			chrome.storage.local.get(['alarm.enabled', 'alarm.scheduledAt'], function(items){
 				let scheduledAt = moment(items['alarm.scheduledAt']);
 				self.alarm.enabled = items['alarm.enabled'];
 				self.alarm.scheduledAt = scheduledAt.isValid() ? scheduledAt.toDate() : new Date();
@@ -51,7 +51,7 @@
 
 		methods: {
 			onSwitch: function(enabled){
-				chrome.storage.sync.set({'alarm.enabled': enabled});
+				chrome.storage.local.set({'alarm.enabled': enabled});
 			},
 
 			onConfirm: function(){
@@ -61,7 +61,7 @@
 					return;
 				}
 				let scheduledAt = this.alarm.scheduledAt.toString();
-				chrome.storage.sync.set({'alarm.scheduledAt': scheduledAt});
+				chrome.storage.local.set({'alarm.scheduledAt': scheduledAt});
 				chrome.runtime.sendMessage({
 					'handler': 'on-alarm-properties-change',
 					'detail': {

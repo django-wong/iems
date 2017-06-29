@@ -52,7 +52,7 @@ window.addEventListener('mailto', function(event){
 
 
 window.addEventListener('scheduled-apply', function(){
-	chrome.storage.sync.get(['alarm.enabled', 'alarm.scheduledAt'], async function(items){
+	chrome.storage.local.get(['alarm.enabled', 'alarm.scheduledAt'], async function(items){
 		// Preliminary checks
 		let enabled = items['alarm.enabled'];
 		let scheduledAt = moment(items['alarm.scheduledAt']);
@@ -134,7 +134,7 @@ window.addEventListener('on-alarm-properties-change', function(event){
 });
 
 // Restore the alarm incase for some reason the alarm dispeared
-chrome.storage.sync.get(['alarm.enabled', 'alarm.scheduledAt'], function(items){
+chrome.storage.local.get(['alarm.enabled', 'alarm.scheduledAt'], function(items){
 	if(!items || !items['alarm.enabled'] || !items['alarm.scheduledAt']){
 		return;
 	}
