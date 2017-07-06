@@ -111,7 +111,11 @@ window.addEventListener('on-alarm-properties-change', function(event){
 	if(!event.detail.enabled){
 		return;
 	}
-	let today = moment().transform(event.detail.scheduledAt);
+
+	/**
+	 * @see http://momentjs.com/docs/#/plugins/transform/
+	 */
+	let today = moment().transform(`${event.detail.scheduledAt}.000`);
 	let tomorrow = today.clone().add(1, 'day');
 	let now = moment();
 	let when = today >= now ? today : tomorrow;
@@ -151,9 +155,5 @@ chrome.storage.local.get(['alarm.enabled', 'alarm.scheduledAt'], function(items)
 			'silence': true
 		}
 	});
-	chrome.alarms.get('scheduled-apply', function(alarm){
-		if(!alarm){
-			window.dispatchEvent(event);
-		}
-	});
+	window.dispatchEvent(event);
 });
