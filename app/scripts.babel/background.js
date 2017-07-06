@@ -75,19 +75,22 @@ window.addEventListener('scheduled-apply', function(){
 		 * @return {void}
 		 */
 		var notify = function(message){
-			chrome.notifications.create('test-message', {
-				type: chrome.notifications.TemplateType.BASIC,
-				title: 'IEMS Jetpack',
-				message: `${message} \n`,
-				iconUrl: `${imagePath}/icon-128.png`
-			}, function(){
-				if(chrome.runtime.lastError){
-					console.log(chrome.runtime.lastError.message);
-				}
+			const id = 'fbb01d5f-29ed-42e1-b91c-8a378925e4c1';
+			chrome.notifications.clear(id, () => {
+				chrome.notifications.create(id, {
+					type: chrome.notifications.TemplateType.BASIC,
+					title: 'IEMS Jetpack',
+					message: `${message} \n`,
+					iconUrl: `${imagePath}/icon-128.png`
+				}, function(){
+					if(chrome.runtime.lastError){
+						console.log(chrome.runtime.lastError.message);
+					}
+				});
 			});
 		};
 
-		if(result[today] === Services.Utility.WORKDAY){
+		if(result[today].toString() === Services.Utility.WORKDAY){
 			Services.Project.zeus().then(function(result){
 				if((result.successCount + result.failCount) === result.total){
 					console.info('ALL GOOD');
@@ -124,16 +127,19 @@ window.addEventListener('on-alarm-properties-change', function(event){
 		'periodInMinutes': 1440
 	});
 	if(!event.detail.silence){
-		chrome.notifications.create('test-message', {
-			'type': chrome.notifications.TemplateType.BASIC,
-			'title': 'IEMS Jetpack',
-			'message': `我将在 ${today >= now ? '今天' : '下个工作日'} ${when.format('HH点mm分')} 时自动填写工作量，届时请保证Chrome正在运行。`,
-			'iconUrl': `${imagePath}/alarm.png`
-		}, function(){
-			if(chrome.runtime.lastError){
-				console.log(chrome.runtime.lastError.message);
-			}
-		});
+		const id = '953fbb38-af7c-4643-be5b-730e49f52a18';
+		chrome.notifications.clear(id, () => {
+			chrome.notifications.create(id, {
+				'type': chrome.notifications.TemplateType.BASIC,
+				'title': 'IEMS Jetpack',
+				'message': `我将在 ${today >= now ? '今天' : '下个工作日'} ${when.format('HH点mm分')} 时自动填写工作量，届时请保证Chrome正在运行。`,
+				'iconUrl': `${imagePath}/alarm.png`
+			}, function(){
+				if(chrome.runtime.lastError){
+					console.log(chrome.runtime.lastError.message);
+				}
+			});
+		})
 	}
 });
 

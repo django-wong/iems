@@ -1,8 +1,8 @@
 /*
 * @Author: Django Wong
 * @Date:   2017-01-09 12:17:22
-* @Last Modified by:   Django Wong
-* @Last Modified time: 2017-06-12 16:49:04
+* @Last Modified by:   django-wong
+* @Last Modified time: 2017-07-06 20:28:34
 * @File Name: services.js
 */
 
@@ -239,17 +239,7 @@ let Utility = function(){
 		 * @return {promise<object>}
 		 */
 		holidaysByMonths: function(months){
-			return new Promise(function(resolve, reject){
-				axios.get('http://www.easybots.cn/api/holiday.php', {
-					params: {
-						m: months.join(',')
-					}
-				}).then(function(response){
-					resolve(response.data);
-				}, function(error){
-					reject(error);
-				})
-			});
+			return this.holidaysByMonth(months.join(','));
 		},
 
 		/**
@@ -258,17 +248,7 @@ let Utility = function(){
 		 * @return {promise<object>}       [description]
 		 */
 		holidaysByDates: function(dates){
-			return new Promise(function(resolve, reject){
-				axios.get('http://www.easybots.cn/api/holiday.php', {
-					params: {
-						d: dates.join(',')
-					}
-				}).then(function(response){
-					resolve(response.data);
-				}, function(error){
-					reject(error);
-				})
-			});
+			return this.holidayOnDate(dates.join(','));
 		},
 
 		/**
@@ -278,9 +258,9 @@ let Utility = function(){
 		 */
 		holidayOnDate: function(date){
 			return new Promise(function(resolve, reject){
-				axios.get('http://www.easybots.cn/api/holiday.php', {
+				axios.get('http://tool.bitefu.net/jiari/', {
 					params: {
-						d: date
+						d: `${date},20170101`
 					}
 				}).then(function(response){
 					resolve(response.data);
