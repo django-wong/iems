@@ -6,7 +6,7 @@
 			</p>
 		</div>
 		<div>
-			<i-input size="large" placeholder="Email" :value.sync="formInline.email" type="email" icon="ios-email-outline"></i-input>
+			<i-input size="large" placeholder="Email" :value.sync="formInline.email" type="text" icon="ios-email-outline"></i-input>
 			<i-input size="large" placeholder="Password" :value.sync="formInline.password" type="password" icon="ios-locked-outline"></i-input>
 			<i-button type="primary" size="large" v-on:click="loginAndSave()" :loading="loading">{{ 'login' | i18n }}</i-button>
 			<br><br>

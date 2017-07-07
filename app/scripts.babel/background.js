@@ -55,8 +55,8 @@ window.addEventListener('scheduled-apply', function(){
 	chrome.storage.local.get(['alarm.enabled', 'alarm.scheduledAt'], async function(items){
 		// Preliminary checks
 		let enabled = items['alarm.enabled'];
-		let scheduledAt = moment(items['alarm.scheduledAt']);
-		if(!enabled || !scheduledAt.isValid()){
+		if(!enabled){
+			console.info('Alarm been cancled');
 			return;
 		}
 
@@ -126,13 +126,16 @@ window.addEventListener('on-alarm-properties-change', function(event){
 		'when': when.valueOf(),
 		'periodInMinutes': 1440
 	});
+
+	const message = `我将在 ${today >= now ? '今天' : '下个工作日'} ${when.format('HH点mm分')} 时自动填写工作量，届时请保证Chrome正在运行。`;
+
 	if(!event.detail.silence){
 		const id = '953fbb38-af7c-4643-be5b-730e49f52a18';
 		chrome.notifications.clear(id, () => {
 			chrome.notifications.create(id, {
 				'type': chrome.notifications.TemplateType.BASIC,
 				'title': 'IEMS Jetpack',
-				'message': `我将在 ${today >= now ? '今天' : '下个工作日'} ${when.format('HH点mm分')} 时自动填写工作量，届时请保证Chrome正在运行。`,
+				'message': message,
 				'iconUrl': `${imagePath}/alarm.png`
 			}, function(){
 				if(chrome.runtime.lastError){
@@ -140,6 +143,8 @@ window.addEventListener('on-alarm-properties-change', function(event){
 				}
 			});
 		})
+	}else{
+		console.info(message);
 	}
 });
 
@@ -148,9 +153,9 @@ chrome.storage.local.get(['alarm.enabled', 'alarm.scheduledAt'], function(items)
 	if(!items || !items['alarm.enabled'] || !items['alarm.scheduledAt']){
 		return;
 	}
-
-	let scheduledAt = moment(items['alarm.scheduledAt']);
+	let scheduledAt = moment(new Date(items['alarm.scheduledAt']));
 	if(!scheduledAt.isValid()){
+		console.info('Invalid alarm.');
 		return;
 	}
 	let time = scheduledAt.format('HH:mm:ss');
@@ -161,5 +166,6 @@ chrome.storage.local.get(['alarm.enabled', 'alarm.scheduledAt'], function(items)
 			'silence': true
 		}
 	});
+	console.info('Restore alarm...');
 	window.dispatchEvent(event);
 });

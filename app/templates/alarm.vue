@@ -34,7 +34,7 @@
 		ready: function(){
 			var self = this;
 			chrome.storage.local.get(['alarm.enabled', 'alarm.scheduledAt'], function(items){
-				let scheduledAt = moment(items['alarm.scheduledAt']);
+				let scheduledAt = moment(new Date(items['alarm.scheduledAt']));
 				self.alarm.enabled = items['alarm.enabled'];
 				self.alarm.scheduledAt = scheduledAt.isValid() ? scheduledAt.toDate() : new Date();
 			});
