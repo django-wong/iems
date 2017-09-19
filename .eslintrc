@@ -11,7 +11,10 @@
 		"moment": true,
 		"Metrics": true,
 		"MG": true,
-		"d3": true
+		"d3": true,
+		"describe": true,
+		"it": true,
+		"expact": true
 	},
 	"rules": {
 		"eol-last": 0,

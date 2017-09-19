@@ -2,7 +2,7 @@
 * @Author: Django Wong
 * @Date:   2017-01-09 12:17:22
 * @Last Modified by:   django-wong
-* @Last Modified time: 2017-07-06 20:28:34
+* @Last Modified time: 2017-09-20 00:39:22
 * @File Name: services.js
 */
 
@@ -81,22 +81,12 @@ let Auth = function(){
 		 */
 		login: function(certificate){
 			return new Promise(function(resolve){
-				axios.post('http://iems.shinetechchina.com.cn/User/Login', {
-					__RequestVerificationToken: certificate.token,
-					Email: certificate.email,
-					Password: certificate.password,
-					RememberMe: 'true'
-				}, {
-					transformRequest: [function(data){
-						var formDate = new FormData();
-						for(var i in data){
-							if(data.hasOwnProperty(i)){
-								formDate.set(i, data[i]);
-							}
-						}
-						return formDate;
-					}]
-				}).then(function(response){
+				var formData = new FormData();
+				formData.append('__RequestVerificationToken', certificate.token);
+				formData.append('Email', certificate.email);
+				formData.append('Password', certificate.password);
+				formData.append('RememberMe', 'true');
+				axios.post('http://iems.shinetechchina.com.cn/User/Login', formData).then(function(response){
 					resolve(response.data.indexOf('注销') !== -1);
 				}).catch(function(error){
 					if(error.response && error.response.data){
@@ -178,10 +168,12 @@ let Utility = function(){
 		 */
 		getViewAndEventData: function(){
 			var that = this;
-			return new Promise(function(resolve){
+			return new Promise(function(resolve, reject){
 				axios.get('http://iems.shinetechchina.com.cn/MyIems/taskes/mytaskes.aspx').then(function(response){
 					let data = that.extractViewAndEventDataFromHTML(response.data);
 					resolve(data);
+				}, function(){
+					reject();
 				});
 			});
 		},
@@ -463,28 +455,25 @@ let Project = function(Vue){
 		 * @param  {string} desc    
 		 * @return {formData}         
 		 */
-		_prepareFormData: async function(project, hours, title, desc){
-			let data = await Vue.Utility.getViewAndEventData();
-			let formData = project.FormData;
-			for(var i in data){
-				if(data.hasOwnProperty(i)){
-					formData.set(i, data[i]);
+		_prepareFormData: function(project, hours, title, desc){
+			return new Promise(async (resolve) => {
+				let data = await Vue.Utility.getViewAndEventData();
+				let formData = project.FormData;
+				for(var i in data){
+					if(data.hasOwnProperty(i)){
+						formData.delete(i);
+						formData.append(i, data[i]);
+					}
 				}
-			}
-			formData.forEach(function(value, name, data){
-				switch(name) {
-					case `ctl00$ContentPlaceHolderMain$rtPOs$ctl${project.$num}$txtTask1`:
-						data.set(name, title);
-						break;
-					case `ctl00$ContentPlaceHolderMain$rtPOs$ctl${project.$num}$txtHours1`:
-						data.set(name, hours);
-						break;
-					case `ctl00$ContentPlaceHolderMain$rtPOs$ctl${project.$num}$txtDescription1`:
-						data.set(name, desc);
-						break;
-				}
+
+				formData.delete(`ctl00$ContentPlaceHolderMain$rtPOs$ctl${project.$num}$txtTask1`);
+				formData.append(`ctl00$ContentPlaceHolderMain$rtPOs$ctl${project.$num}$txtTask1`, title);
+				formData.delete(`ctl00$ContentPlaceHolderMain$rtPOs$ctl${project.$num}$txtHours1`);
+				formData.append(`ctl00$ContentPlaceHolderMain$rtPOs$ctl${project.$num}$txtHours1`, hours);
+				formData.delete(`ctl00$ContentPlaceHolderMain$rtPOs$ctl${project.$num}$txtDescription1`);
+				formData.append(`ctl00$ContentPlaceHolderMain$rtPOs$ctl${project.$num}$txtDescription1`, desc);
+				resolve(formData);
 			});
-			return formData;
 		},
 
 		/**
@@ -534,7 +523,6 @@ let Project = function(Vue){
 		 */
 		star: function(project_code){
 			// TODO: Start a project
-			console.info(project_code);
 		},
 
 		/**
@@ -544,7 +532,6 @@ let Project = function(Vue){
 		 */
 		unstar: function(project_code){
 			// TODO: Unstart the project
-			console.info(project_code);
 		},
 
 		/**
@@ -608,10 +595,10 @@ let History = function(){
 		 */
 		query: function(contact, name, start, due){
 			let formData = new FormData();
-			formData.set('ctl00$ContentPlaceHolderMain$txtPrimaryContact', contact);
-			formData.set('ctl00$ContentPlaceHolderMain$txtProjectId', name);
-			formData.set('ctl00$ContentPlaceHolderMain$txtStartDate', start);
-			formData.set('ctl00$ContentPlaceHolderMain$txtDueDate', due);
+			formData.append('ctl00$ContentPlaceHolderMain$txtPrimaryContact', contact);
+			formData.append('ctl00$ContentPlaceHolderMain$txtProjectId', name);
+			formData.append('ctl00$ContentPlaceHolderMain$txtStartDate', start);
+			formData.append('ctl00$ContentPlaceHolderMain$txtDueDate', due);
 			return new Promise(function(resolve){
 				axios.post('http://iems.shinetechchina.com.cn/MyIems/taskes/mytaskeslist.aspx', formData).then(function(response){
 					let html = response.data;
