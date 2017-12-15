@@ -2,79 +2,79 @@
 * @Author: django-wong
 * @Date:   2017-09-19 01:37:50
 * @Last Modified by:   django-wong
-* @Last Modified time: 2017-09-20 00:16:12
+* @Last Modified time: 2017-12-16 02:04:14
 */
 
 var qs = require('querystring');
 
 class FormData{
 
-	constructor() {
+    constructor() {
 
-	}
+    }
 
-	set(key, value) {
-		this[key] = value;
-	}
+    set(key, value) {
+        this[key] = value;
+    }
 
-	get(key) {
-		return this[key];
-	}
+    get(key) {
+        return this[key];
+    }
 
-	append(key, value) {
-		this[key] = value;
-	}
+    append(key, value) {
+        this[key] = value;
+    }
 
-	entries() {
-		let entries = [];
-		for(let key in this) {
-			if(this.hasOwnProperty(key)){
-				entries.push([key, this[key]]);
-			}
-		}
-		return entries;
-	}
+    entries() {
+        let entries = [];
+        for(let key in this) {
+            if(this.hasOwnProperty(key)){
+                entries.push([key, this[key]]);
+            }
+        }
+        return entries;
+    }
 
-	keys() {
-		let keys = [];
-		for(let key in this) {
-			if(this.hasOwnProperty(key)){
-				keys.push(key);
-			}
-		}
-		return keys;
-	}
+    keys() {
+        let keys = [];
+        for(let key in this) {
+            if(this.hasOwnProperty(key)){
+                keys.push(key);
+            }
+        }
+        return keys;
+    }
 
-	values() {
-		let values = [];
-		for(let key in this) {
-			if(this.hasOwnProperty(key)){
-				values.push(this[key]);
-			}
-		}
-		return values;
-	}
+    values() {
+        let values = [];
+        for(let key in this) {
+            if(this.hasOwnProperty(key)){
+                values.push(this[key]);
+            }
+        }
+        return values;
+    }
 
-	delete(key) {
-		this[key] = undefined;
-		delete[key];
-	}
+    delete(key) {
+        this[key] = undefined;
+        delete[key];
+    }
 
-	has(key) {
-		return this.hasOwnProperty(key);
-	}
+    has(key) {
+        return this.hasOwnProperty(key);
+    }
 
-	getAll(key) {
-		return [this[key]];
-	}
+    getAll(key) {
+        return [this[key]];
+    }
 
-	toString() {
-		return qs.stringify(this);
-	}
+    toString() {
+        return qs.stringify(this);
+    }
 
-	toJson() {
-		return JSON.parse(JSON.stringify(this));
-	}
+    toJson() {
+        return JSON.parse(JSON.stringify(this));
+    }
 
 }
 

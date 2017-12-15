@@ -1,43 +1,43 @@
 {
-  "name": "__MSG_appName__",
-  "version": "1.0.6",
-  "manifest_version": 2,
-  "description": "__MSG_appDescription__",
-  "icons": {
-    "16": "images/icon-16.png",
-    "128": "images/icon-128.png"
-  },
-  "default_locale": "zh_CN",
-  "background": {
-    "scripts": [
-      "scripts/chromereload.js",
-      "scripts/background.js"
-    ]
-  },
-  "permissions": [
-    "cookies",
-    "idle",
-    "notifications",
-    "storage",
-    "webRequest",
-    "http://iems.shinetechchina.com.cn/",
-    "http://www.easybots.cn/",
-    "http://tool.bitefu.net/",
-    "tabs",
-    "alarms"
-  ],
-  "browser_action": {
-    "default_icon": {
-      "19": "images/icon-19.png",
-      "38": "images/icon-38.png"
+    "name": "__MSG_appName__",
+    "version": "1.0.8",
+    "manifest_version": 2,
+    "description": "__MSG_appDescription__",
+    "icons": {
+        "16": "images/icon-16.png",
+        "128": "images/icon-128.png"
     },
-    "default_title": "iems",
-    "default_popup": "popup.html"
-  },
-  "web_accessible_resources": [
-    "images/icon-48.png"
-  ],
-  "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
-  "author": "黄经国",
-  "homepage_url": "https://djangowong.com"
+    "default_locale": "zh_CN",
+    "background": {
+        "scripts": [
+            "scripts/chromereload.js",
+            "scripts/background.js"
+        ]
+    },
+    "permissions": [
+        "cookies",
+        "idle",
+        "notifications",
+        "storage",
+        "webRequest",
+        "http://iems.shinetechchina.com.cn/",
+        "http://www.easybots.cn/",
+        "http://tool.bitefu.net/",
+        "tabs",
+        "alarms"
+    ],
+    "browser_action": {
+        "default_icon": {
+            "19": "images/icon-19.png",
+            "38": "images/icon-38.png"
+        },
+        "default_title": "iems",
+        "default_popup": "popup.html"
+    },
+    "web_accessible_resources": [
+        "images/icon-48.png"
+    ],
+    "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
+    "author": "黄经国",
+    "homepage_url": "https://djangowong.com"
 }

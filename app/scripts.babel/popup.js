@@ -17,7 +17,7 @@ Vue.use(VueRouter);
 Vue.use(Services);
 
 Vue.filter('i18n', function(str){
-	return chrome.i18n.getMessage(str) || str;
+    return chrome.i18n.getMessage(str) || str;
 });
 
 let options = Vue.extend({});
