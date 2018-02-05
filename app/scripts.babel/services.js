@@ -2,7 +2,7 @@
 * @Author: Django Wong
 * @Date:   2017-01-09 12:17:22
 * @Last Modified by:   django-wong
-* @Last Modified time: 2017-12-16 02:06:04
+* @Last Modified time: 2018-02-06 01:03:01
 * @File Name: services.js
 */
 
@@ -632,7 +632,7 @@ let History = function(){
 
         queryThisMonth: function(contact, name){
             let start = DateRange.ThisMonth[0].format('YYYY-MM-DD');
-            let due = DateRange.ThisMonth[0].format('YYYY-MM-DD');
+            let due = DateRange.ThisMonth[1].format('YYYY-MM-DD');
             return this.query(contact, name, start, due);
         },
 
@@ -643,7 +643,7 @@ let History = function(){
 
         queryLast7Days: function(contact, name){
             let start = DateRange.Last7Days[0].format('YYYY-MM-DD');
-            let due = DateRange.Last7Days[0].format('YYYY-MM-DD');
+            let due = DateRange.Last7Days[1].format('YYYY-MM-DD');
             return this.query(contact, name, start, due);
         },
 
