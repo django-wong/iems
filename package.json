@@ -55,7 +55,7 @@
     "iview": "^0.9.13",
     "merge-stream": "^1.0.1",
     "metrics-graphics": "^2.11.0",
-    "moment": "^2.17.1",
+    "moment": "^2.21.0",
     "moment-transform": "^1.0.1",
     "query-string": "^4.2.3",
     "vinyl-named": "^1.1.0",
