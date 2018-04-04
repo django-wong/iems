@@ -2,7 +2,7 @@
 * @Author: Django Wong
 * @Date:   2017-01-09 02:07:47
 * @Last Modified by:   django-wong
-* @Last Modified time: 2017-12-16 01:58:13
+* @Last Modified time: 2018-04-04 18:03:05
 * @File Name: router.js
 */
 
@@ -17,7 +17,7 @@ pages.alarm = require('../templates/alarm.vue');
 pages.preference = require('../templates/preference.vue');
 
 module.exports = {
-    '/preference/:id': {
+    '/preference/:sha1': {
         component: pages.preference
     },
 
@@ -33,7 +33,7 @@ module.exports = {
         component: pages.dashboard
     },
 
-    '/show/:id': {
+    '/show/:sha1': {
         component: pages.show
     },
 

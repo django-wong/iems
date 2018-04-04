@@ -26,7 +26,7 @@
     var i18n = chrome.i18n.getMessage;
     export default {
         ready: function(){
-            let item = this.$Project.obtainProject(this.$route.params.id);
+            let item = this.$Project.obtainProject(this.$route.params.sha1);
             this.$data.item = item;
             this.$data.hours = item.data.hours;
             this.$data.title = item.data.title;
@@ -49,7 +49,7 @@
         methods: {
             save: async function(item){
                 var self = this;
-                this.$Project.setPerference(item.ProjectCode, this.hours, this.title, this.desc, this.excluded).then(function(){
+                this.$Project.setPerference(item.$SHA1, this.hours, this.title, this.desc, this.excluded).then(function(){
                     self.$Message.info(`${item.ProjectName} ${i18n('saved')}`);
                 });
             }

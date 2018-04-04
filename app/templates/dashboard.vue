@@ -16,15 +16,17 @@
         <div v-for="item in items" track-by="$index">
             <Card :bordered="true" dis-hover class="project-card">
                 <p slot="title">
-                    <Icon class="project-action" type="gear-a" v-link="{path:'/preference/'+item.ProjectCode}"></Icon>
-                    <a v-link="{path:'/show/'+item.ProjectCode}">{{ item.ProjectName }}</a>
+                    <Icon class="project-action" type="gear-a" v-link="{path:'/preference/'+item.$SHA1}"></Icon>
+                    <a v-link="{path:'/show/'+item.$SHA1}">{{ item.ProjectName }}</a>
                 </p>
                 <p>{{ 'primaryContact' | i18n }}: <span>{{ item.PrimaryContact }}</span></p>
-                <p>{{ 'dueDate' | i18n  }}: <span>{{ item.DueDate }}</span></p>
-                <p>{{ 'remainingHours' | i18n  }}: <span>{{ item.RemainingHours }}{{ 'hour' | i18n }}</span></p>
                 <p>{{ 'projectCode' | i18n  }}: <span>{{ item.ProjectCode }}</span></p>
+                <p>{{ 'poNo' | i18n  }}: <span>{{ item.PONo }}</span></p>
+                <p>{{ 'unitPrice' | i18n  }}: <span>{{ item.UnitPrice }} {{ item.Unit }}</span></p>
+                <p>{{ 'remainingHours' | i18n  }}: <span>{{ item.RemainingHours }}{{ 'hour' | i18n }}</span></p>
+                <p>{{ 'dueDate' | i18n  }}: <span>{{ item.DueDate }}</span></p>
                 <div class="quick-do">
-                    <Input-number :max="8" :min="0" :value.sync="item.data.hours" @keyup.enter="record(item)" :disabled="item.data.recording"></Input-number>
+                    <Input-number :max="8" :min="-8" :value.sync="item.data.hours" @keyup.enter="record(item)" :disabled="item.data.recording"></Input-number>
                 </div>
             </Card>
         </div>
@@ -59,7 +61,7 @@
 
         methods: {
             show: function(item){
-                this.$router.go(`/show/${item.ProjectCode}`);
+                this.$router.go(`/show/${item.$SHA1}`);
             },
 
             record: function(item){

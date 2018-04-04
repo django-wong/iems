@@ -34,7 +34,7 @@
     var i18n = chrome.i18n.getMessage;
     export default {
         ready: function(){
-            let item = this.$Project.obtainProject(this.$route.params.id);
+            let item = this.$Project.obtainProject(this.$route.params.sha1);
             this.$data.item = item;
             this.$data.hours = item.data.hours;
             this.$data.title = item.data.title;

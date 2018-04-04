@@ -2,7 +2,7 @@
 * @Author: Django Wong
 * @Date:   2017-01-09 12:17:22
 * @Last Modified by:   django-wong
-* @Last Modified time: 2018-02-06 01:03:01
+* @Last Modified time: 2018-04-04 18:09:53
 * @File Name: services.js
 */
 
@@ -10,6 +10,7 @@
 
 var moment = require('moment');
 var axios = require('axios');
+var sha1 = require('sha1');
 
 FormData.toJson = function(formData){
     var data = {};
@@ -316,10 +317,10 @@ let Project = function(Vue){
                         var project = {
                             HidIsOverTime: HidIsOverTimeEle ? (HidIsOverTimeEle.value.toUpperCase() === 'FALSE' ? false : true) : false,
                             PrimaryContact: PrimaryContactEle ? PrimaryContactEle.textContent : null,
-                            ProjectCode: ProjectCodeEle ? ProjectCodeEle.textContent : null,
+                            ProjectCode: ProjectCodeEle ? ProjectCodeEle.textContent : '',
                             ProjectName: ProjectNameEle ? ProjectNameEle.textContent : null,
                             POType: ProjectNameEle ? ProjectNameEle.parentElement.nextElementSibling.querySelector('b').nextSibling.textContent.substr(2) : null,
-                            PONo: PONoEle ? PONoEle.textContent : null,
+                            PONo: PONoEle ? PONoEle.textContent : '',
                             DateSigned: DateSignedEle ? DateSignedEle.textContent : null,
                             StartDate: StartDateEle ? StartDateEle.textContent : null,
                             DueDate: DueDateEle ? DueDateEle.textContent : null,
@@ -339,7 +340,9 @@ let Project = function(Vue){
                                 excluded: false
                             }
                         };
-                        let preference = preferences[project.ProjectCode];
+                        project.$SHA1 = sha1(project.ProjectCode.trim()+'&'+project.PONo.trim());
+
+                        let preference = preferences[project.$SHA1] || preferences[project.ProjectCode];
                         if(preference && preference.hasOwnProperty('hours')){
                             project.data.hours = preference.hours;
                             project.data.title = preference.title;
@@ -439,9 +442,9 @@ let Project = function(Vue){
          * @param  {string} ProjectCode 
          * @return {object}             
          */
-        obtainProject: function(ProjectCode){
+        obtainProject: function($SHA1){
             for (var i = 0; i < projects.length; i++) {
-                if(projects[i].ProjectCode === ProjectCode){
+                if(projects[i].$SHA1 === $SHA1){
                     return projects[i];
                 }
             }
@@ -555,14 +558,14 @@ let Project = function(Vue){
          * @param  {boolean} excluded    
          * @return {void}             
          */
-        setPerference: async function(projectCode, hours, title, desc, excluded){
+        setPerference: async function($SHA1, hours, title, desc, excluded){
             var preferences = await this.getProjectPerferences();
-            var preference = await this.getPerference(projectCode);
+            var preference = await this.getPerference($SHA1);
             preference.hours = hours;
             preference.title = title;
             preference.desc = desc;
             preference.excluded = excluded;
-            preferences[projectCode] = preference;
+            preferences[$SHA1] = preference;
             chrome.storage.sync.set({
                 'preference.projects': preferences
             });
@@ -570,13 +573,13 @@ let Project = function(Vue){
 
         /**
          * Get the project preferences
-         * @param  {string} projectCode 
+         * @param  {string} $SHA1 
          * @return {object}             
          */
-        getPerference: async function(projectCode){
+        getPerference: async function($SHA1){
             var preferences = await this.getProjectPerferences();
-            if(preferences.hasOwnProperty(projectCode)){
-                return preferences[projectCode];
+            if(preferences.hasOwnProperty($SHA1)){
+                return preferences[$SHA1];
             }
             return {};
         }
