@@ -2,7 +2,7 @@
 * @Author: Django Wong
 * @Date:   2017-01-09 12:17:22
 * @Last Modified by:   django-wong
-* @Last Modified time: 2018-04-04 18:09:53
+* @Last Modified time: 2018-04-28 16:43:43
 * @File Name: services.js
 */
 
@@ -319,7 +319,7 @@ let Project = function(Vue){
                             PrimaryContact: PrimaryContactEle ? PrimaryContactEle.textContent : null,
                             ProjectCode: ProjectCodeEle ? ProjectCodeEle.textContent : '',
                             ProjectName: ProjectNameEle ? ProjectNameEle.textContent : null,
-                            POType: ProjectNameEle ? ProjectNameEle.parentElement.nextElementSibling.querySelector('b').nextSibling.textContent.substr(2) : null,
+                            POType: ProjectNameEle ? ProjectNameEle.parentElement.nextElementSibling.textContent.split(' ').pop() : null,
                             PONo: PONoEle ? PONoEle.textContent : '',
                             DateSigned: DateSignedEle ? DateSignedEle.textContent : null,
                             StartDate: StartDateEle ? StartDateEle.textContent : null,

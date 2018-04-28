@@ -21,7 +21,7 @@
                 </p>
                 <p>{{ 'primaryContact' | i18n }}: <span>{{ item.PrimaryContact }}</span></p>
                 <p>{{ 'projectCode' | i18n  }}: <span>{{ item.ProjectCode }}</span></p>
-                <p>{{ 'poNo' | i18n  }}: <span>{{ item.PONo }}</span></p>
+                <p>{{ 'poType' | i18n  }}: <span>{{ item.POType }}</span></p>
                 <p>{{ 'unitPrice' | i18n  }}: <span>{{ item.UnitPrice }} {{ item.Unit }}</span></p>
                 <p>{{ 'remainingHours' | i18n  }}: <span>{{ item.RemainingHours }}{{ 'hour' | i18n }}</span></p>
                 <p>{{ 'dueDate' | i18n  }}: <span>{{ item.DueDate }}</span></p>
