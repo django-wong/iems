@@ -2,7 +2,7 @@
 
 var i18n = window.i18n = chrome.i18n.getMessage;
 var qs = require('query-string');
-var moment = require('moment');
+var moment = window.moment = require('moment');
 require('moment-transform');
 var imagePath = chrome.extension.getURL('images');
 var Services = require('./services.js').init({});
@@ -52,6 +52,7 @@ window.addEventListener('mailto', function(event){
 
 
 window.addEventListener('scheduled-apply', function(){
+
     chrome.storage.local.get(['alarm.enabled', 'alarm.scheduledAt'], async function(items){
         // Preliminary checks
         let enabled = items['alarm.enabled'];
@@ -111,9 +112,6 @@ window.addEventListener('scheduled-apply', function(){
 
 window.addEventListener('on-alarm-properties-change', function(event){
     chrome.alarms.clear('scheduled-apply');
-    if(!event.detail.enabled){
-        return;
-    }
 
     /**
      * @see http://momentjs.com/docs/#/plugins/transform/
@@ -122,6 +120,7 @@ window.addEventListener('on-alarm-properties-change', function(event){
     let tomorrow = today.clone().add(1, 'day');
     let now = moment();
     let when = today >= now ? today : tomorrow;
+
     chrome.alarms.create('scheduled-apply', {
         'when': when.valueOf(),
         'periodInMinutes': 1440
@@ -148,24 +147,64 @@ window.addEventListener('on-alarm-properties-change', function(event){
     }
 });
 
-// Restore the alarm incase for some reason the alarm dispeared
-chrome.storage.local.get(['alarm.enabled', 'alarm.scheduledAt'], function(items){
-    if(!items || !items['alarm.enabled'] || !items['alarm.scheduledAt']){
-        return;
-    }
-    let scheduledAt = moment(new Date(items['alarm.scheduledAt']));
-    if(!scheduledAt.isValid()){
-        console.info('Invalid alarm.');
-        return;
-    }
-    let time = scheduledAt.format('HH:mm:ss');
-    let event = new CustomEvent('on-alarm-properties-change', {
-        'detail': {
-            'enabled': true,
-            'scheduledAt': time,
-            'silence': true
+/**
+ * Restore the alarm incase for some reason the alarm dispeared
+ */
+var restore = function(){
+    chrome.storage.local.get(['alarm.enabled', 'alarm.scheduledAt'], function(items){
+        if(!items || !items['alarm.enabled'] || !items['alarm.scheduledAt']){
+            return;
         }
+        let scheduledAt = moment(new Date(items['alarm.scheduledAt']));
+        if(!scheduledAt.isValid()){
+            console.info('Invalid alarm.');
+            return;
+        }
+        let time = scheduledAt.format('HH:mm:ss');
+        let event = new CustomEvent('on-alarm-properties-change', {
+            'detail': {
+                'enabled': true,
+                'scheduledAt': time,
+                'silence': true
+            }
+        });
+        console.info('Restore alarm...');
+        window.dispatchEvent(event);
     });
-    console.info('Restore alarm...');
-    window.dispatchEvent(event);
-});
+};
+
+// window.addEventListener('crontab', async function(){
+//     chrome.storage.local.get(['alarm.enabled', 'alarm.scheduledAt'], function(items){
+//         if(!items || !items['alarm.enabled'] || !items['alarm.scheduledAt']){
+//             return;
+//         }
+
+//         let scheduledAt = moment(items['alarm.scheduledAt']);
+//         let time = scheduledAt.format('HH:mm:ss');
+//         let scheduled = moment().transform(time, 'HH:mm:ss');
+//         let now = Date.now();
+
+//         if(scheduled > now - 2 * 60000 && scheduled < now + 2 * 60000){
+//             console.info('should apply...');
+//         }
+//     });
+// });
+
+// chrome.alarms.create('crontab', {
+//     'periodInMinutes': 0.1
+// });
+
+
+let hello = async function() {
+    let today = moment().format('YYYYMMDD');
+    let result = await Services.Utility.holidayOnDate(today);
+    if(result[today].toString() !== Services.Utility.WORKDAY){
+        console.info('Hi, 周末愉快');
+        await Services.History.cleanApplyHostories();
+    }else{
+        console.info('Hi, 工作愉快');
+    }
+};
+
+hello();
+restore();
