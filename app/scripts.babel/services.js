@@ -2,7 +2,7 @@
 * @Author: Django Wong
 * @Date:   2017-01-09 12:17:22
 * @Last Modified by:   django-wong
-* @Last Modified time: 2018-04-28 16:43:43
+* @Last Modified time: 2018-06-11 18:22:28
 * @File Name: services.js
 */
 
@@ -65,7 +65,7 @@ let Auth = function(){
          */
         getRequestVerificationToken: function(){
             return new Promise(function(resolve){
-                axios.get('http://iems.shinetechchina.com.cn/User/Login').then(function(response){
+                axios.get('http://iems.shinetechchina.com.cn/User/Login?ReturnUrl=%2F').then(function(response){
                     var div = document.createElement('div');
                     div.innerHTML = response.data;
                     resolve(div.querySelector('[name="__RequestVerificationToken"]').value);
@@ -105,8 +105,8 @@ let Auth = function(){
         logout: function(){
             chrome.alarms.clearAll(console.log);
             return new Promise(function(resolve){
-                axios.post('http://iems.shinetechchina.com.cn/User/LogOff').then(function(response){
-                    resolve(response.data.indexOf('log in') !== -1);
+                axios.post('http://iems.shinetechchina.com.cn/User/LogOff').then(function(){
+                    resolve(true);
                 }).catch(function(){
                     resolve(false);
                 });

@@ -72,6 +72,7 @@
         methods: {
             exit: async function(){
                 let logOff = await this.$Auth.logout();
+                console.info('log off: ', logOff);
                 if(logOff){
                     chrome.storage.sync.set({'password': ''});
                     window.close();
