@@ -2,7 +2,7 @@
 * @Author: Django Wong
 * @Date:   2017-01-09 12:17:22
 * @Last Modified by:   django-wong
-* @Last Modified time: 2018-06-11 18:22:28
+* @Last Modified time: 2018-06-14 17:12:38
 * @File Name: services.js
 */
 
@@ -87,7 +87,7 @@ let Auth = function(){
                 formData.append('Email', certificate.email);
                 formData.append('Password', certificate.password);
                 formData.append('RememberMe', 'true');
-                axios.post('http://iems.shinetechchina.com.cn/User/Login', formData).then(function(response){
+                axios.post('http://iems.shinetechchina.com.cn/User/Login?ReturnUrl=%2F', formData).then(function(response){
                     resolve(response.data.indexOf('注销') !== -1);
                 }).catch(function(error){
                     if(error.response && error.response.data){

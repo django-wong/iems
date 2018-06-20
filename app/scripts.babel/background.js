@@ -1,7 +1,6 @@
 'use strict';
 
 var i18n = window.i18n = chrome.i18n.getMessage;
-var qs = require('query-string');
 var moment = window.moment = require('moment');
 require('moment-transform');
 var imagePath = chrome.extension.getURL('images');
@@ -25,35 +24,17 @@ chrome.runtime.onMessage.addListener(function(message, sender, callback){
 });
 
 chrome.alarms.onAlarm.addListener(function(alarm){
-    console.info(`on alarm: ${alarm.name}`);
+    console.info(`on alarm: ${alarm.name}`, new Date());
     let event = new CustomEvent(alarm.name, {
         detail: alarm
     });
     window.dispatchEvent(event);
 });
 
-window.addEventListener('mailto', function(event){
-    var mail = event.detail;
-    var address = function(a){
-        return Array.isArray(a) ? a.join(',') : a || '';
-    };
-    let to = address(mail.to);
-    delete mail.to;
-    let query = qs.stringify(mail);
-
-    let url = `mailto:${to}?${query}`;
-
-    chrome.tabs.create({ url: url }, function(tab) {
-        setTimeout(function() {
-            chrome.tabs.remove(tab.id);
-        }, 500);
-    });
-});
-
 
 window.addEventListener('scheduled-apply', function(){
 
-    chrome.storage.local.get(['alarm.enabled', 'alarm.scheduledAt'], async function(items){
+    chrome.storage.local.get(['alarm.enabled', 'alarm.scheduledAt'], async function(items) {
         // Preliminary checks
         let enabled = items['alarm.enabled'];
         if(!enabled){
@@ -118,6 +99,11 @@ window.addEventListener('on-alarm-properties-change', function(event){
      */
     let today = moment().transform(`${event.detail.scheduledAt}.000`);
     let tomorrow = today.clone().add(1, 'day');
+
+    console.info(event.detail.scheduledAt);
+    console.info(today.format('今天：YYYY/MM/DD HH:mm:ss'));
+    console.info(tomorrow.format('明天：YYYY/MM/DD HH:mm:ss'));
+
     let now = moment();
     let when = today >= now ? today : tomorrow;
 
@@ -126,7 +112,7 @@ window.addEventListener('on-alarm-properties-change', function(event){
         'periodInMinutes': 1440
     });
 
-    const message = `我将在 ${today >= now ? '今天' : '下个工作日'} ${when.format('HH点mm分')} 时自动填写工作量，届时请保证Chrome正在运行。`;
+    const message = `我将在 ${today >= now ? '今天' : '下个工作日'} ${when.format('MM月DD日 HH点mm分')} 时自动填写工作量，届时请保证Chrome正在运行。`;
 
     if(!event.detail.silence){
         const id = '953fbb38-af7c-4643-be5b-730e49f52a18';
@@ -147,53 +133,6 @@ window.addEventListener('on-alarm-properties-change', function(event){
     }
 });
 
-/**
- * Restore the alarm incase for some reason the alarm dispeared
- */
-var restore = function(){
-    chrome.storage.local.get(['alarm.enabled', 'alarm.scheduledAt'], function(items){
-        if(!items || !items['alarm.enabled'] || !items['alarm.scheduledAt']){
-            return;
-        }
-        let scheduledAt = moment(new Date(items['alarm.scheduledAt']));
-        if(!scheduledAt.isValid()){
-            console.info('Invalid alarm.');
-            return;
-        }
-        let time = scheduledAt.format('HH:mm:ss');
-        let event = new CustomEvent('on-alarm-properties-change', {
-            'detail': {
-                'enabled': true,
-                'scheduledAt': time,
-                'silence': true
-            }
-        });
-        console.info('Restore alarm...');
-        window.dispatchEvent(event);
-    });
-};
-
-// window.addEventListener('crontab', async function(){
-//     chrome.storage.local.get(['alarm.enabled', 'alarm.scheduledAt'], function(items){
-//         if(!items || !items['alarm.enabled'] || !items['alarm.scheduledAt']){
-//             return;
-//         }
-
-//         let scheduledAt = moment(items['alarm.scheduledAt']);
-//         let time = scheduledAt.format('HH:mm:ss');
-//         let scheduled = moment().transform(time, 'HH:mm:ss');
-//         let now = Date.now();
-
-//         if(scheduled > now - 2 * 60000 && scheduled < now + 2 * 60000){
-//             console.info('should apply...');
-//         }
-//     });
-// });
-
-// chrome.alarms.create('crontab', {
-//     'periodInMinutes': 0.1
-// });
-
 
 let hello = async function() {
     let today = moment().format('YYYYMMDD');
@@ -206,5 +145,11 @@ let hello = async function() {
     }
 };
 
+
 hello();
-restore();
+
+
+chrome.alarms.create('self-check', {
+    'when': (new Date()).valueOf(),
+    'periodInMinutes': 5
+});
