@@ -27,7 +27,9 @@
                 <p>{{ 'holidays' | i18n }}：<span v-text="profile.YearHoliday"></span>{{ 'day' | i18n }}</p>
                 <p>{{ 'remainHolidays' | i18n }}：<span v-text="profile.RemainYearHoliday"></span>{{ 'day' | i18n }}</p>
                 <hr>
-                <p>{{ 'totalHoursInThisMonth' | i18n }}: <span v-text="totalHoursInThisMonth"></span>{{ 'hour' | i18n }}</p>
+                <p>
+                    {{ 'totalHoursInThisMonth' | i18n }}: <span v-text="totalHoursInThisMonth"></span>{{ 'hour' | i18n }}
+                </p>
             </div>
         </Card>
 

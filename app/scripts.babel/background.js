@@ -41,16 +41,7 @@ window.addEventListener('scheduled-apply', function(){
             console.info('Alarm been cancled');
             return;
         }
-
-        let today = moment().format('YYYYMMDD');
-        let result = await Services.Utility.holidayOnDate(today);
-        let inHistories = await Services.History.inAutoApplyHistories(today);
         
-        if(inHistories){
-            console.info('Already applied today');
-            return;
-        }
-
         /**
          * Show a notify quickly
          * @param  {string} message 
@@ -71,6 +62,23 @@ window.addEventListener('scheduled-apply', function(){
                 });
             });
         };
+
+        let today, result, inHistories;
+
+        try{
+            today = moment().format('YYYYMMDD');
+            result = await Services.Utility.holidayOnDate(today);
+            inHistories = await Services.History.inAutoApplyHistories(today);
+        }catch(e){
+            notify(`${i18n('oops')} \n ${e.toString()}`)
+            return;
+        }
+        
+        if(inHistories){
+            console.info('Already applied today');
+            return;
+        }
+
 
         if(result[today].toString() === Services.Utility.WORKDAY){
             Services.Project.zeus().then(function(result){
